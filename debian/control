@@ -1,0 +1,13 @@
+Source: rawcam
+Section: user/unknown
+Priority: extra
+Maintainer: Example <example@example.com>
+Build-Depends: debhelper (>= 5), libfcam-dev
+Standards-Version: 3.7.2
+
+Package: rawcam
+Architecture: any
+Section: user/unknown
+Depends: fcam0 | fcam1, ${shlibs:Depends}, ${misc:Depends}
+Description: FCam rawcam
+ FCam rawcam for Harmattan

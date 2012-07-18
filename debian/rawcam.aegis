@@ -1,0 +1,6 @@
+<aegis>
+ <request>
+   <credential name="GRP::video" />
+   <for path="/usr/bin/rawcam" id="rawcam" />
+ </request>
+</aegis>

@@ -1,0 +1,2 @@
+shlibs:Depends=libc6 (>= 2.4), libgcc1 (>= 1:4.1.1), libjpeg62, libqtcore4 (>= 4.7.4~git20110517), libqtgui4 (>= 4.7.4~git20110517), libqtm-sensors (>= 1.2.1+193+0m6), libstdc++6 (>= 4.4.0)
+misc:Depends=

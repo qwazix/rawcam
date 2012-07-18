@@ -1,0 +1,26 @@
+QPushButton {
+     background-color: transparent;
+/*     border-style: outset;
+     border-width: 2px;
+     border-color: #DDDDDD;*/
+     color: white;
+     min-width: 100px;
+     min-height: 100px;
+/*     border-radius: 44px;*/
+}
+
+QPushButton#w {
+    max-width: 1px;
+    min-width: 1px;
+    border-width: 0px;
+    background-color: black;
+/*    rgb(12, 14, 3);*/
+}
+
+QLabel {
+    background-color: rgba(0,0,0,0.5);
+    border-image: url(/opt/rawcam/helpBg.png);
+    color: white;
+    font-size: 20;
+    padding-left: 30px;
+}
