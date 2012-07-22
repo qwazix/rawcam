@@ -1,3 +1,9 @@
+rawcam (0.0.20120720-0~rzr1) harmattan; urgency=low
+
+  * wip: http://talk.maemo.org/showthread.php?t=85512&page=3
+
+ -- Philippe Coval <rzr@gna.org>  Sun, 22 Jul 2012 13:13:11 +0200
+
 rawcam (0.0.0-0~rzr1) precise; urgency=low
 
   * Non-maintainer upload.
