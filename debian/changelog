@@ -1,6 +1,11 @@
+rawcam (0.0.0-0~rzr1) precise; urgency=low
+
+  * Non-maintainer upload.
+
+ -- Philippe Coval <rzr@gna.org>  Sun, 15 Jul 2012 21:40:27 +0200
+
 rawcam (0.0.1-1) unstable; urgency=low
 
   * Initial release
 
  -- Example <example@example.com>  Thu, 25 Aug 2011 16:51:07 -0700
-
