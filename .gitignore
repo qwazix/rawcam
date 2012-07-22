@@ -1,2 +1,6 @@
+*.o
+moc*
+*.pro.user
+
 MANIFEST
 *~
