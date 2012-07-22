@@ -86,4 +86,31 @@ void CameraParameters::setExposureValue(int val){
     this->exposure.value = powf((float)val, beta)*alpha + gamma;
 }
 
+void CameraParameters::setFocusMode(int mode){
+    this->focus.mode = mode;
+}
+void CameraParameters::setFocusModeAuto(){
+    this->focus.mode = Focus::AUTO;
+}
+void CameraParameters::setFocusModeMan(){
+    this->focus.mode = Focus::MANUAL;
+}
+void CameraParameters::setFocusModeSpot(){
+    this->focus.mode = Focus::SPOT;
+}
+
+void CameraParameters::setFocusValue(float val){
+    this->focus.value = val;
+}
+
+void CameraParameters::setFocusValue(int val){
+    this->focus.value = (1000-val)/50.0;
+}
+
+void CameraParameters::setFocusSpot(int x, int y){
+    this->focus.spot.setX(x);
+    this->focus.spot.setY(y);
+    qDebug()<<"setFocusSpot: Setting target to " << x << y;
+}
+
 

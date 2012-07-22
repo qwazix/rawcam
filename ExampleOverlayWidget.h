@@ -13,7 +13,7 @@ class ExampleOverlayWidget : public OverlayWidget {
 		bool inputHandler(QMouseEvent *);
 
 signals:
-    void focus();
+    void focus(int, int);
     void shutter();
 
 };
