@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'ExampleOverlayWidget.h'
 **
-** Created: Sun Jul 22 13:18:23 2012
+** Created: Sun Jul 22 19:29:47 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -31,14 +31,15 @@ static const uint qt_meta_data_ExampleOverlayWidget[] = {
        2,       // signalCount
 
  // signals: signature, parameters, type, tag, flags
-      21,   29,   29,   29, 0x05,
-      30,   29,   29,   29, 0x05,
+      21,   36,   38,   38, 0x05,
+      39,   38,   38,   38, 0x05,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_ExampleOverlayWidget[] = {
-    "ExampleOverlayWidget\0focus()\0\0shutter()\0"
+    "ExampleOverlayWidget\0focus(int,int)\0"
+    ",\0\0shutter()\0"
 };
 
 const QMetaObject ExampleOverlayWidget::staticMetaObject = {
@@ -70,7 +71,7 @@ int ExampleOverlayWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: focus(); break;
+        case 0: focus((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
         case 1: shutter(); break;
         default: ;
         }
@@ -80,9 +81,10 @@ int ExampleOverlayWidget::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
 }
 
 // SIGNAL 0
-void ExampleOverlayWidget::focus()
+void ExampleOverlayWidget::focus(int _t1, int _t2)
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, 0);
+    void *_a[] = { 0, const_cast<void*>(reinterpret_cast<const void*>(&_t1)), const_cast<void*>(reinterpret_cast<const void*>(&_t2)) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 
 // SIGNAL 1

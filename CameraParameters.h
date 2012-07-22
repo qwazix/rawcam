@@ -81,6 +81,14 @@ public slots:
     void setExposureValue(float);
     void setExposureValue(int);
 
+    void setFocusMode(int);
+    void setFocusModeAuto();
+    void setFocusModeMan();
+    void setFocusModeSpot();
+    void setFocusValue(float);
+    void setFocusValue(int);
+    void setFocusSpot(int, int);
+
 
 signals:
     // A signal signifying that the camera parameters have changed.

@@ -17,6 +17,7 @@
 #include "ExampleOverlayWidget.h"
 #include "myproximitysensor.h"
 #include "CameraParameters.h"
+#include "dot.h"
 
 QTM_USE_NAMESPACE
 
@@ -120,7 +121,6 @@ int main(int argc, char **argv) {
     exp->addButton(p);
     exp->addButton(m);
 
-
     // exposure slider
     QSlider* expSlider = new QSlider(Qt::Horizontal, window);
     expSlider->resize(700,40);
@@ -131,7 +131,6 @@ int main(int argc, char **argv) {
     expSlider->setValue(500);
 
     CameraParameters* params = cameraThread->parameters;
-    qDebug()<<params;
 
     QObject::connect(p,SIGNAL(clicked()), expSlider, SLOT(hide()));
     QObject::connect(p,SIGNAL(clicked()), params, SLOT(setExposureModeAuto()));
@@ -139,6 +138,59 @@ int main(int argc, char **argv) {
     QObject::connect(m,SIGNAL(clicked()), params, SLOT(setExposureModeMan()));
     QObject::connect(expSlider,SIGNAL(valueChanged(int)), params, SLOT(setExposureValue(int)));
 
+    // focus control
+    QButtonGroup* foc = new QButtonGroup(window);
+    exp->setExclusive(true);
+
+    QPushButton* af = new QPushButton("AF", window);
+    af->setFont(QFont("Nokia Pure Text", 30, 200, false));
+    af->move(670, 10);
+    af->setCheckable(true);
+    af->setChecked(true);
+
+    QPushButton* sf = new QPushButton("", window);
+    sf->move(725, 15);
+    sf->setObjectName("sf");
+    sf->setIconSize(QSize(32,32));
+    sf->setCheckable(true);
+    sf->setChecked(false);
+    //focus dot (spot metering)
+    dot* spot = new dot(" ", window);
+    spot->setObjectName("spot");
+    spot->hide();
+
+    QPushButton* mf = new QPushButton("MF", window);
+    mf->setFont(QFont("Nokia Pure Text", 30, 200, false));
+    mf->move(780,10);
+    mf->setCheckable(true);
+    mf->setChecked(false);
+
+    foc->addButton(af);
+    foc->addButton(mf);
+    foc->addButton(sf);
+
+    // focus slider
+    QSlider* focusSlider = new QSlider(Qt::Vertical, window);
+    focusSlider->resize(40,390);
+    focusSlider->move(18, 40);
+    focusSlider->hide();
+    focusSlider->setMinimum(0);
+    focusSlider->setMaximum(1000);
+    focusSlider->setValue(500);
+
+    QObject::connect(af,SIGNAL(clicked()), focusSlider, SLOT(hide()));
+    QObject::connect(af,SIGNAL(clicked()), params, SLOT(setFocusModeAuto()));
+    QObject::connect(af,SIGNAL(clicked()), spot, SLOT(hide()));
+
+    QObject::connect(mf,SIGNAL(clicked()), focusSlider, SLOT(show()));
+    QObject::connect(mf,SIGNAL(clicked()), params, SLOT(setFocusModeMan()));
+    QObject::connect(mf,SIGNAL(clicked()), spot, SLOT(hide()));
+
+    QObject::connect(sf,SIGNAL(clicked()), focusSlider, SLOT(hide()));
+    QObject::connect(sf,SIGNAL(clicked()), params, SLOT(setFocusModeSpot()));
+    QObject::connect(sf,SIGNAL(clicked()), spot, SLOT(show()));
+
+    QObject::connect(focusSlider,SIGNAL(valueChanged(int)), params, SLOT(setFocusValue(int)));
 
     // help label
     QPushButton* help = new QPushButton("cover the proximity \nsensor to focus", window);
@@ -163,8 +215,10 @@ int main(int argc, char **argv) {
                      overlay, SLOT(newViewfinderFrame()));
 
     // Connect overlay signals to cameraThread slots
-//    QObject::connect(overlay, SIGNAL(focus()),
-//                     &cameraThread, SLOT(focus_on()));
+    QObject::connect(overlay, SIGNAL(focus(int, int)), params, SLOT(setFocusSpot(int, int)));
+
+    //connect overlay touch to spot circle label
+    QObject::connect(overlay, SIGNAL(focus(int, int)), spot, SLOT(move(int,int)));
 
 
     // Once the camera thread stops, quit the app

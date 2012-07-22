@@ -2,10 +2,12 @@
 16e4591d901db604d703c2e6f0c29153  opt/rawcam/helpBg.png
 5672f3b95e09a8b350511e3629c338e8  opt/rawcam/icon.png
 05ac510785cd0c21a9c61459494e0ae6  opt/rawcam/shutter.png
-2cf00f50bd97ee6e3168fc64708da7ed  opt/rawcam/style.css
-5ff46d496bef8af18724cba1daf3f73c  usr/bin/rawcam
+a905c0390e11b87f64a712a58b1003eb  opt/rawcam/spot.png
+287766901dcd11dd530086408c2ecb5b  opt/rawcam/spotGrey.png
+c6938674dd37be452e4aff685f19f0a1  opt/rawcam/style.css
+fd641c3f62c605ce8f1217d98c562e20  usr/bin/rawcam
 dc3c3c4df356a8b574d32d318b6bdb36  usr/share/applications/rawcam.desktop
-25e1e05005ef1e8c908d1a96da1b70b9  usr/share/doc/rawcam/changelog.gz
+b9c435537b397e4093f783dcf1293d9c  usr/share/doc/rawcam/changelog.gz
 b9c46d233a1d09a035566b61cdc33b34  usr/share/doc/rawcam/copyright
 d4d2b8a0515a54a341e3a1968eca2b24  usr/share/icons/hicolor/80x80/apps/rawcam.png
 991d345ec264482f2bd2b1359cba141c  usr/share/policy/etc/syspart.conf.d/rawcam.syspart.conf

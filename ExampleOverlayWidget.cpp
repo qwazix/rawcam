@@ -28,7 +28,9 @@ bool ExampleOverlayWidget::inputHandler(QMouseEvent *e)
 //		return true;
 //	}
 //	return false;
-    return false;
+
+    emit focus(e->x(),e->y());
+    return true;
 }
 
 

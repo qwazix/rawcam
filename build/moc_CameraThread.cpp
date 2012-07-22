@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'CameraThread.h'
 **
-** Created: Sun Jul 22 13:18:22 2012
+** Created: Sun Jul 22 19:29:46 2012
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.7.4)
 **
 ** WARNING! All changes made in this file will be lost!

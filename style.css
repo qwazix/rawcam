@@ -39,10 +39,28 @@ QPushButton#help  {
     max-height: 80px;
 }
 
+QPushButton#sf{
+    background: url("/opt/rawcam/spotGrey.png") no-repeat transparent;
+    border: 0 none;
+}
+
+QPushButton#sf:checked{
+    background-image: url("/opt/rawcam/spot.png");
+}
+
+
 QLabel {
     background-color: transparent;
     color: white;
     font-size: 20;
+}
+
+QLabel#spot, dot#spot {
+    max-width: 30px;
+    max-height: 30px;
+    background: transparent;
+    border-radius: 15px;
+    border: 2px solid white;
 }
 
 QSlider::groove:horizontal {
@@ -55,8 +73,24 @@ QSlider::groove:horizontal {
      background: transparent;
      border: 2px solid white;
      min-height: 30px;
-width: 10px;
+     width: 10px;
      padding: 15px;
      margin: -6px 0px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+     border-radius: 15px;
+ }
+
+QSlider::groove:vertical {
+     width: 30px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+     background: url(/opt/rawcam/halftone.png);
+     margin: 0 2px;
+ }
+
+ QSlider::handle:vertical {
+     background: transparent;
+     border: 2px solid white;
+     min-width: 30px;
+     height: 10px;
+     padding: 15px;
+     margin: 0 -6px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;
  }
