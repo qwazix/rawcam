@@ -1,8 +1,12 @@
 Source: rawcam
 Section: user/unknown
 Priority: extra
-Maintainer: Example <example@example.com>
-Build-Depends: debhelper (>= 5), libfcam-dev
+Maintainer: Philippe Coval <rzr@gna.org>
+Build-Depends: debhelper (>= 5), pkg-config,
+ libfcam-dev,
+ libqt4-dev,
+ libqt4-declarative-dev, libqtm-multimedia-dev, libqtm-sensors-dev,
+ libjpeg62-dev
 Standards-Version: 3.7.2
 
 Package: rawcam
