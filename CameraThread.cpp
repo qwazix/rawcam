@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "OverlayWidget.h"
+#include "CameraParameters.h"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ void CameraThread::run() {
 
     // The viewfinder shot
     FCam::Shot viewfinder;
-    viewfinder.exposure = 40000;
+    viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
     viewfinder.gain = 1.0f;
     // run at 25 fps
     viewfinder.frameTime = 40000;
@@ -107,9 +108,17 @@ void CameraThread::run() {
 
 			// update the autofocus and metering algorithms
 			autoFocus.update(f);
-			autoExpose(&viewfinder, f, 88);
+            if (parameters->exposure.mode == parameters->exposure.AUTO) autoExpose(&viewfinder, f, 88);
+            else viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
 			autoWhiteBalance(&viewfinder, f);
-			sensor.stream(viewfinder);
+            sensor.stream(viewfinder);
+            QString humanReadableExposure;
+            if (viewfinder.exposure >= 1000000) {
+                humanReadableExposure = QString::number(viewfinder.exposure /1000000) + "s";
+            } else {
+                humanReadableExposure = "1/" + QString::number(1000000 / (viewfinder.exposure));
+            }
+            emit exposureInfo(humanReadableExposure);
 
 			emit newViewfinderFrame();
 		    } else {

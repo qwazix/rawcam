@@ -3,10 +3,22 @@ QPushButton {
 /*     border-style: outset;
      border-width: 2px;
      border-color: #DDDDDD;*/
-     color: white;
-     min-width: 100px;
-     min-height: 100px;
+     color: #BBBBBB;
+     min-width: 40px;
+     max-width: 50px;
+     min-height: 40px;
+     font-size: 35;
 /*     border-radius: 44px;*/
+}
+
+QPushButton#shutter {
+    min-width: 100px;
+    max-width: 100px;
+    min-height: 100px;
+}
+
+QPushButton:checked{
+    color: white;
 }
 
 QPushButton#w {
@@ -17,10 +29,34 @@ QPushButton#w {
 /*    rgb(12, 14, 3);*/
 }
 
-QLabel {
+QPushButton#help  {
     background-color: rgba(0,0,0,0.5);
     border-image: url(/opt/rawcam/helpBg.png);
     color: white;
     font-size: 20;
     padding-left: 30px;
+    max-width: 320px;
+    max-height: 80px;
 }
+
+QLabel {
+    background-color: transparent;
+    color: white;
+    font-size: 20;
+}
+
+QSlider::groove:horizontal {
+     height: 30px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
+     background: url(/opt/rawcam/halftone.png);
+     margin: 2px 0;
+ }
+
+ QSlider::handle:horizontal {
+     background: transparent;
+     border: 2px solid white;
+     min-height: 30px;
+width: 10px;
+     padding: 15px;
+     margin: -6px 0px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
+     border-radius: 15px;
+ }
