@@ -14,4 +14,4 @@ Architecture: any
 Section: user/unknown
 Depends: fcam0 | fcam1, ${shlibs:Depends}, ${misc:Depends}
 Description: FCam rawcam
- FCam rawcam for Harmattan
+ FCam rawcam for MeeGo/Harmattan Nokia devices
