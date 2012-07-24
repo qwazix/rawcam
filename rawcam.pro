@@ -53,17 +53,17 @@ style.files  = style.css \
 #
 # Targets for debian source and binary package creation
 
-debian-src.commands = dpkg-buildpackage -S -r -us -uc -d -I'\\.svn';
-debian-bin.commands = dpkg-buildpackage -b -r -uc -d;
+#debian-src.commands = dpkg-buildpackage -S -r -us -uc -d -I'\\.svn';
+#debian-bin.commands = dpkg-buildpackage -b -r -uc -d;
 
-debian-all.depends = debian-src debian-bin
+#debian-all.depends = debian-src debian-bin
 
-#-----------------------------
-# Clean all but Makefile
+##-----------------------------
+## Clean all but Makefile
 
-compiler_clean.commands = -$(DEL_FILE) $(TARGET)
+#compiler_clean.commands = -$(DEL_FILE) $(TARGET)
 
-QMAKE_EXTRA_TARGETS += debian-all debian-src debian-bin compiler_clean 
+#QMAKE_EXTRA_TARGETS += debian-all debian-src debian-bin compiler_clean
 
 OTHER_FILES += \
     qtc_packaging/debian_harmattan/rules \
