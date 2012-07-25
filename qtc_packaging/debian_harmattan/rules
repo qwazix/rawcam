@@ -16,10 +16,14 @@
 configure: configure-stamp
 configure-stamp:
 	dh_testdir
-	# qmake PREFIX=/usr# Uncomment this line for use without Qt Creator
+
+	##OBS qmake -recursive
+
+	###OBS qmake PREFIX=/opt
+
 
 	touch configure-stamp
-
+	#qmake -recursive
 
 build: build-stamp
 
@@ -27,7 +31,7 @@ build-stamp: configure-stamp
 	dh_testdir
 
 	# Add here commands to compile the package.
-	# $(MAKE) # Uncomment this line for use without Qt Creator
+	##OBS $(MAKE)
 	#docbook-to-man debian/rawcam.sgml > rawcam.1
 
 	touch $@
@@ -49,7 +53,7 @@ install: build
 	dh_installdirs
 
 	# Add here commands to install the package into debian/rawcam.
-	$(MAKE) INSTALL_ROOT="$(CURDIR)"/debian/rawcam install
+	$(MAKE)  INSTALL_ROOT="$(CURDIR)"/debian/rawcam install
 
 
 # Build architecture-independent files here.
@@ -82,10 +86,10 @@ binary-arch: build install
 #	dh_perl
 #	dh_makeshlibs
 	dh_installdeb
-	# dh_shlibdeps # Uncomment this line for use without Qt Creator
+	##OBS dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums
 	dh_builddeb
-
+	##OBS aegis-deb-add -control debian/rawcam/DEBIAN/control .. debian/manifest.aegis=_aegis
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install configure
