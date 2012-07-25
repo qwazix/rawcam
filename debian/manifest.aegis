@@ -1,0 +1,14 @@
+<aegis>
+  <request>
+    <credential name="GID::users" />
+    <credential name="TrackerReadAccess" />
+    <credential name="TrackerWriteAccess" />
+    <credential name="GRP::metadata-users" />
+    <credential name="UID::user" />
+    <credential name="GRP::users" />
+    <credential name="GRP::video" />
+    <credential name="GRP::pulse-access" />
+    <for path="/usr/bin/rawcam" />
+  </request>
+</aegis>
+

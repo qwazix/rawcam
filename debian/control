@@ -3,7 +3,7 @@ Section: user/other
 Priority: optional
 Maintainer: Michael Demetriou <qwazix@unknown>
 Build-Depends: debhelper (>= 7), pkg-config,
-##OBS  libfcam-dev,
+ libfcam-dev,
  libqt4-dev,
  libqt4-declarative-dev, libqtm-multimedia-dev, libqtm-sensors-dev,
  libjpeg62-dev, aegis-builder

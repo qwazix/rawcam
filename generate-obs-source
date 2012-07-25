@@ -11,8 +11,8 @@ TARGET="harmattan_10.2011.34-1_rt1.2"
 
 test -e debian && rm -rf debian
 cp -r qtc_packaging/debian_harmattan debian
-#mv debian/rules.bck debian/rules
 sed --in-place -e 's,##OBS ,,g' debian/*
+
 
 # Needed for dpkg-buildpacke as it wants to call make clean
 echo -e "clean:\n\techo clean" > Makefile
