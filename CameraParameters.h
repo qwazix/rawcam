@@ -81,6 +81,12 @@ public slots:
     void setExposureValue(float);
     void setExposureValue(int);
 
+    void setGainMode(int);
+    void setGainModeAuto();
+    void setGainModeMan();
+    void setGainValue(int);
+    void setGainValue(float);
+
     void setFocusMode(int);
     void setFocusModeAuto();
     void setFocusModeMan();

@@ -19,7 +19,7 @@ namespace Plat = FCam::N9;
 
 void CameraThread::run() {
     // Make an asynchronous file writer to save images in the background
-    FCam::AsyncFileWriter writer;
+
     Plat::Sensor sensor;
     Plat::Lens lens;
     Plat::Flash flash;
@@ -124,10 +124,35 @@ void CameraThread::run() {
 			// update the autofocus and metering algorithms
             autoFocus.update(f);
 
-            if (parameters->exposure.mode == parameters->exposure.AUTO) autoExpose(&viewfinder, f, 88);
-            else viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
+            autoExpose(&viewfinder, f, sensor.maxGain(),  sensor.maxExposure(), 0.5);
+
+            if (parameters->exposure.mode == parameters->exposure.AUTO && parameters->gain.mode == parameters->gain.AUTO) {
+                //we auto expose anyway and then modify the values so nothing left to be done here
+                //and i dont want to reverse all the structure
+
+            }
+            else if (parameters->exposure.mode == parameters->exposure.MANUAL && parameters->gain.mode == parameters->gain.MANUAL) {
+                viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
+                viewfinder.gain = parameters->gain.value;
+            } else {
+                if (parameters->exposure.mode == CameraParameters::Exposure::MANUAL) {
+                    int newExp = int(1000000*parameters->exposure.value+0.5);
+                    viewfinder.gain *= viewfinder.exposure;
+                    viewfinder.gain /= newExp;
+                    viewfinder.exposure = newExp;
+                    // clamp to possible gains
+                    if (viewfinder.gain < 1.0) viewfinder.gain = 1.0;
+                    if (viewfinder.gain > 32.0) viewfinder.gain = 32.0;
+                }
+
+                if (parameters->gain.mode == CameraParameters::Gain::MANUAL) {
+                    int newGain = parameters->gain.value;
+                    viewfinder.exposure *= viewfinder.gain / newGain;
+                    viewfinder.gain = newGain;
+                }
+            }
 			autoWhiteBalance(&viewfinder, f);
-            sensor.stream(viewfinder);
+
             QString humanReadableExposure;
             if (viewfinder.exposure >= 1000000) {
                 humanReadableExposure = QString::number(viewfinder.exposure /1000000) + "s";
@@ -135,7 +160,9 @@ void CameraThread::run() {
                 humanReadableExposure = "1/" + QString::number(1000000 / (viewfinder.exposure));
             }
             emit exposureInfo(humanReadableExposure);
+            emit gainInfo("ISO "+QString::number(int(viewfinder.gain*100)));
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
+            sensor.stream(viewfinder);
 			emit newViewfinderFrame();
 		    } else {
 			printf("got some other frame\n");
