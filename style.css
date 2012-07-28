@@ -64,6 +64,14 @@ QLabel#spot, dot#spot {
     border: 2px solid white;
 }
 
+QLabel#spot, dot#spot {
+    max-width: 30px;
+    max-height: 30px;
+    background: transparent;
+    border-radius: 15px;
+    border: 2px solid white;
+}
+
 QSlider::groove:horizontal {
      height: 30px; /* the groove expands to the size of the slider by default. by giving it a height, it has a fixed size */
      background: url(/opt/rawcam/halftone.png);
@@ -74,7 +82,11 @@ QSlider::groove:horizontal {
      background: transparent;
      border: 2px solid white;
      min-height: 30px;
+<<<<<<< HEAD
      width: 20px;
+=======
+     width: 10px;
+>>>>>>> cca6f18522c9cada943789faa617be1fc221e039
      padding: 15px;
      margin: -6px 0px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;
@@ -90,7 +102,11 @@ QSlider::groove:vertical {
      background: transparent;
      border: 2px solid white;
      min-width: 30px;
+<<<<<<< HEAD
      height: 20px;
+=======
+     height: 10px;
+>>>>>>> cca6f18522c9cada943789faa617be1fc221e039
      padding: 15px;
      margin: 0 -6px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;

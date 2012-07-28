@@ -124,6 +124,7 @@ void CameraThread::run() {
 			// update the autofocus and metering algorithms
             autoFocus.update(f);
 
+<<<<<<< HEAD
             autoExpose(&viewfinder, f, sensor.maxGain(),  sensor.maxExposure(), 0.5);
 
             if (parameters->exposure.mode == parameters->exposure.AUTO && parameters->gain.mode == parameters->gain.AUTO) {
@@ -151,6 +152,10 @@ void CameraThread::run() {
                     viewfinder.gain = newGain;
                 }
             }
+=======
+            if (parameters->exposure.mode == parameters->exposure.AUTO) autoExpose(&viewfinder, f, 88);
+            else viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
+>>>>>>> cca6f18522c9cada943789faa617be1fc221e039
 			autoWhiteBalance(&viewfinder, f);
 
             QString humanReadableExposure;
@@ -160,9 +165,13 @@ void CameraThread::run() {
                 humanReadableExposure = "1/" + QString::number(1000000 / (viewfinder.exposure));
             }
             emit exposureInfo(humanReadableExposure);
+<<<<<<< HEAD
             emit gainInfo("ISO "+QString::number(int(viewfinder.gain*100)));
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
             sensor.stream(viewfinder);
+=======
+//            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
+>>>>>>> cca6f18522c9cada943789faa617be1fc221e039
 			emit newViewfinderFrame();
 		    } else {
 			printf("got some other frame\n");
