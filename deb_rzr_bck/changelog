@@ -1,3 +1,9 @@
+rawcam (0.0.20120724-0~rzr1) harmattan; urgency=low
+
+  * merge back
+
+ -- Philippe Coval <rzr@gna.org>  Tue, 24 Jul 2012 00:39:50 +0200
+
 rawcam (0.0.3) unstable; urgency=low
   * Added manual focus control, and spot focus
 
