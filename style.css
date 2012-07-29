@@ -53,14 +53,7 @@ QLabel {
     background-color: transparent;
     color: white;
     font-size: 20;
-}
-
-QLabel#spot, dot#spot {
-    max-width: 30px;
-    max-height: 30px;
-    background: transparent;
-    border-radius: 15px;
-    border: 2px solid white;
+    text-align: right;
 }
 
 QLabel#spot, dot#spot {
@@ -81,15 +74,7 @@ QSlider::groove:horizontal {
      background: transparent;
      border: 2px solid white;
      min-height: 30px;
-<<<<<<< HEAD
-<<<<<<< HEAD
      width: 20px;
-=======
-     width: 10px;
->>>>>>> cca6f18522c9cada943789faa617be1fc221e039
-=======
-     width: 10px;
->>>>>>> parent of 1b27137... beta4
      padding: 15px;
      margin: -6px 0px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;
@@ -105,15 +90,7 @@ QSlider::groove:vertical {
      background: transparent;
      border: 2px solid white;
      min-width: 30px;
-<<<<<<< HEAD
-<<<<<<< HEAD
      height: 20px;
-=======
-     height: 10px;
->>>>>>> cca6f18522c9cada943789faa617be1fc221e039
-=======
-     height: 10px;
->>>>>>> parent of 1b27137... beta4
      padding: 15px;
      margin: 0 -6px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;

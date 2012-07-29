@@ -86,8 +86,6 @@ void CameraParameters::setExposureValue(int val){
     this->exposure.value = powf((float)val, beta)*alpha + gamma;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 void CameraParameters::setGainMode(int mode){
     this->gain.mode = mode;
 }
@@ -107,10 +105,6 @@ void CameraParameters::setGainValue(int val){
 }
 
 
-=======
->>>>>>> cca6f18522c9cada943789faa617be1fc221e039
-=======
->>>>>>> parent of 1b27137... beta4
 void CameraParameters::setFocusMode(int mode){
     this->focus.mode = mode;
 }
