@@ -19,7 +19,7 @@ namespace Plat = FCam::N9;
 
 void CameraThread::run() {
     // Make an asynchronous file writer to save images in the background
-
+    FCam::AsyncFileWriter writer;
     Plat::Sensor sensor;
     Plat::Lens lens;
     Plat::Flash flash;
@@ -125,6 +125,7 @@ void CameraThread::run() {
             autoFocus.update(f);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             autoExpose(&viewfinder, f, sensor.maxGain(),  sensor.maxExposure(), 0.5);
 
             if (parameters->exposure.mode == parameters->exposure.AUTO && parameters->gain.mode == parameters->gain.AUTO) {
@@ -156,8 +157,12 @@ void CameraThread::run() {
             if (parameters->exposure.mode == parameters->exposure.AUTO) autoExpose(&viewfinder, f, 88);
             else viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
 >>>>>>> cca6f18522c9cada943789faa617be1fc221e039
+=======
+            if (parameters->exposure.mode == parameters->exposure.AUTO) autoExpose(&viewfinder, f, 88);
+            else viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
+>>>>>>> parent of 1b27137... beta4
 			autoWhiteBalance(&viewfinder, f);
-
+            sensor.stream(viewfinder);
             QString humanReadableExposure;
             if (viewfinder.exposure >= 1000000) {
                 humanReadableExposure = QString::number(viewfinder.exposure /1000000) + "s";
@@ -166,12 +171,16 @@ void CameraThread::run() {
             }
             emit exposureInfo(humanReadableExposure);
 <<<<<<< HEAD
+<<<<<<< HEAD
             emit gainInfo("ISO "+QString::number(int(viewfinder.gain*100)));
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
             sensor.stream(viewfinder);
 =======
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
 >>>>>>> cca6f18522c9cada943789faa617be1fc221e039
+=======
+//            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
+>>>>>>> parent of 1b27137... beta4
 			emit newViewfinderFrame();
 		    } else {
 			printf("got some other frame\n");

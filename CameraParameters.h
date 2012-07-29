@@ -82,6 +82,7 @@ public slots:
     void setExposureValue(int);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     void setGainMode(int);
     void setGainModeAuto();
     void setGainModeMan();
@@ -90,6 +91,8 @@ public slots:
 
 =======
 >>>>>>> cca6f18522c9cada943789faa617be1fc221e039
+=======
+>>>>>>> parent of 1b27137... beta4
     void setFocusMode(int);
     void setFocusModeAuto();
     void setFocusModeMan();

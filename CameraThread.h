@@ -17,7 +17,6 @@ class CameraThread : public QThread {
 
 public:
     CameraParameters* parameters;
-    FCam::AsyncFileWriter writer;
     CameraThread(OverlayWidget *o, QObject *parent = NULL) : QThread(parent) {
         overlay = o;
         keepGoing = true;
@@ -25,7 +24,6 @@ public:
 	active = true;
 	cameralock = new QSemaphore(1);
     parameters = new CameraParameters;
-
     }
 
 
@@ -60,7 +58,6 @@ public slots:
 signals:
     void newViewfinderFrame();
     void exposureInfo(QString);
-    void gainInfo(QString);
 
 protected:
     void run();

@@ -66,7 +66,6 @@ int main(int argc, char **argv) {
 //    app.setStyleSheet(readFile("/opt/rawcam/style.css"));
     window->setStyleSheet(readFile("/opt/rawcam/style.css"));
 
-
     ExampleOverlayWidget *overlay = new ExampleOverlayWidget();
 
     // Make a thread that controls the camera
@@ -102,21 +101,6 @@ int main(int argc, char **argv) {
     QObject::connect(prx, SIGNAL(sensorOpen()), cameraThread, SLOT(focus_off()));
     prx->start();
 
-    //exposure info label
-    QLabel* exposureInfo = new QLabel(window);
-    exposureInfo->move(720,435);
-    exposureInfo->setAlignment(Qt::AlignRight);
-    exposureInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
-    QObject::connect(cameraThread,SIGNAL(exposureInfo(QString)), exposureInfo, SLOT(setText(QString)));
-
-    //gain info label
-    QLabel* gainInfo = new QLabel(window);
-    gainInfo->move(700,395);
-    gainInfo->resize(120, 30);
-    gainInfo->setAlignment(Qt::AlignRight);
-    gainInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
-    QObject::connect(cameraThread,SIGNAL(gainInfo(QString)), gainInfo, SLOT(setText(QString)));
-
     // exposure control
     QButtonGroup* exp = new QButtonGroup(window);
     exp->setExclusive(true);
@@ -128,72 +112,40 @@ int main(int argc, char **argv) {
     p->setCheckable(true);
     p->setChecked(true);
 
-    QPushButton* s = new QPushButton("S", window);
-    s->setFont(QFont("Nokia Pure Text", 30, 200, false));
-    s->move(90, 10);
-    s->setCheckable(true);
-    s->setChecked(false);
-
-    QPushButton* iso = new QPushButton("I", window);
-    iso->setFont(QFont("Nokia Pure Text", 30, 200, false));
-    iso->move(150, 10);
-    iso->setCheckable(true);
-    iso->setChecked(false);
-
     QPushButton* m = new QPushButton("M", window);
     m->setFont(QFont("Nokia Pure Text", 30, 200, false));
-    m->move(210,10);
+    m->move(90,10);
     m->setCheckable(true);
     m->setChecked(false);
 
     exp->addButton(p);
     exp->addButton(m);
 <<<<<<< HEAD
+<<<<<<< HEAD
     exp->addButton(s);
     exp->addButton(iso);
 =======
 >>>>>>> cca6f18522c9cada943789faa617be1fc221e039
+=======
+>>>>>>> parent of 1b27137... beta4
 
     // exposure slider
     QSlider* expSlider = new QSlider(Qt::Horizontal, window);
-    expSlider->resize(750,40);
-    expSlider->move(80, 430);
+    expSlider->resize(700,40);
+    expSlider->move(20, 430);
     expSlider->hide();
     expSlider->setMinimum(0);
     expSlider->setMaximum(1000);
     expSlider->setValue(500);
 
-    // gain slider
-    QSlider* gainSlider = new QSlider(Qt::Horizontal, window);
-    gainSlider->resize(750,40);
-    gainSlider->move(80, 390);
-    gainSlider->hide();
-    gainSlider->setMinimum(0);
-    gainSlider->setMaximum(1000);
-    gainSlider->setValue(500);
-
     CameraParameters* params = cameraThread->parameters;
 
     QObject::connect(p,SIGNAL(clicked()), expSlider, SLOT(hide()));
     QObject::connect(p,SIGNAL(clicked()), params, SLOT(setExposureModeAuto()));
-    QObject::connect(p,SIGNAL(clicked()), gainSlider, SLOT(hide()));
-
-    QObject::connect(m,SIGNAL(clicked()), params, SLOT(setExposureModeMan()));
     QObject::connect(m,SIGNAL(clicked()), expSlider, SLOT(show()));
-    QObject::connect(m,SIGNAL(clicked()), params, SLOT(setGainModeMan()));
-    QObject::connect(m,SIGNAL(clicked()), gainSlider, SLOT(show()));
-
-    QObject::connect(s,SIGNAL(clicked()), expSlider, SLOT(show()));
-    QObject::connect(s,SIGNAL(clicked()), gainSlider, SLOT(hide()));
-    QObject::connect(s,SIGNAL(clicked()), params, SLOT(setExposureModeMan()));
-    QObject::connect(s,SIGNAL(clicked()), params, SLOT(setGainModeAuto()));
-
-    QObject::connect(iso,SIGNAL(clicked()), expSlider, SLOT(hide()));
-    QObject::connect(iso,SIGNAL(clicked()), gainSlider, SLOT(show()));
-    QObject::connect(iso,SIGNAL(clicked()), params, SLOT(setExposureModeAuto()));
-    QObject::connect(iso,SIGNAL(clicked()), params, SLOT(setGainModeMan()));
-
+    QObject::connect(m,SIGNAL(clicked()), params, SLOT(setExposureModeMan()));
     QObject::connect(expSlider,SIGNAL(valueChanged(int)), params, SLOT(setExposureValue(int)));
+<<<<<<< HEAD
     QObject::connect(gainSlider,SIGNAL(valueChanged(int)), params, SLOT(setGainValue(int)));
 
     // focus control
@@ -249,6 +201,8 @@ int main(int argc, char **argv) {
     QObject::connect(sf,SIGNAL(clicked()), spot, SLOT(show()));
 
     QObject::connect(focusSlider,SIGNAL(valueChanged(int)), params, SLOT(setFocusValue(int)));
+=======
+>>>>>>> parent of 1b27137... beta4
 
     // focus control
     QButtonGroup* foc = new QButtonGroup(window);
@@ -283,8 +237,8 @@ int main(int argc, char **argv) {
 
     // focus slider
     QSlider* focusSlider = new QSlider(Qt::Vertical, window);
-    focusSlider->resize(40,400);
-    focusSlider->move(18, 60);
+    focusSlider->resize(40,390);
+    focusSlider->move(18, 40);
     focusSlider->hide();
     focusSlider->setMinimum(0);
     focusSlider->setMaximum(1000);
@@ -313,6 +267,12 @@ int main(int argc, char **argv) {
     QTimer::singleShot(8000, help, SLOT(hide()));
     QObject::connect(help, SIGNAL(clicked()), help, SLOT(hide()));
     //settings.setValue("helpTimeout", 68);
+
+    //exposure info label
+    QLabel* exposureInfo = new QLabel(window);
+    exposureInfo->move(750,440);
+    exposureInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
+    QObject::connect(cameraThread,SIGNAL(exposureInfo(QString)), exposureInfo, SLOT(setText(QString)));
 
 
     // Get the overlay to update when the camera has a new viewfinder
@@ -347,8 +307,6 @@ int main(int argc, char **argv) {
     cameraThread->start();
 
     // Enter the QT main event loop
-    app.exec();
-
-    while (cameraThread->writer.savesPending() > 0) sleep(1);
+    return app.exec();
 }
 
