@@ -1,3 +1,7 @@
+build-stamp
+configure-stamp
+build/*
+Makefile.qt
 *.o
 moc*
 *.pro.user
