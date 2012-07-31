@@ -80,11 +80,19 @@ int main(int argc, char **argv) {
     //w->setStyleSheet("background-color:transparent");
     layout->addWidget(w);
 
+    // gallery button
+    QPushButton* gallery = new QPushButton("", window);
+    gallery->move(780, 55);
+    gallery->setObjectName("gallery");
+    gallery->hide();
+
+    // shutter button
     QPushButton* shutter = new QPushButton(QIcon("/opt/rawcam/shutter.png"),"",window);
     shutter->setIconSize(QSize(90,90));
     shutter->move(750,200);
     shutter->setObjectName("shutter");
     QObject::connect(shutter, SIGNAL(released()), cameraThread, SLOT(snapshot()));
+    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
 
 
 
@@ -116,6 +124,48 @@ int main(int argc, char **argv) {
     gainInfo->setAlignment(Qt::AlignRight);
     gainInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
     QObject::connect(cameraThread,SIGNAL(gainInfo(QString)), gainInfo, SLOT(setText(QString)));
+
+
+    CameraParameters* params = cameraThread->parameters;
+
+    QObject::connect(gallery,SIGNAL(clicked()), params, SLOT(openLastPicture()));
+
+    // flash control
+    QButtonGroup* flash = new QButtonGroup(window);
+    flash->setExclusive(true);
+
+    QPushButton* noflash = new QPushButton("", window);
+    noflash->move(405, 15);
+    noflash->setObjectName("noflash");
+    noflash->setCheckable(true);
+    noflash->setChecked(true);
+
+    QPushButton* flashHalf = new QPushButton("", window);
+    flashHalf->move(450, 15);
+    flashHalf->setObjectName("flashHalf");
+    flashHalf->setCheckable(true);
+    flashHalf->setChecked(false);
+
+    QPushButton* flashFull = new QPushButton("", window);
+    flashFull->move(495, 15);
+    flashFull->setObjectName("flashFull");
+    flashFull->setCheckable(true);
+    flashFull->setChecked(false);
+
+    flash->addButton(noflash);
+    flash->addButton(flashHalf);
+    flash->addButton(flashFull);
+
+    QPushButton* backCurtain = new QPushButton("", window);
+    backCurtain->move(555, 15);
+    backCurtain->setObjectName("backCurtain");
+    backCurtain->setCheckable(true);
+    backCurtain->setChecked(false);
+
+    QObject::connect(noflash,SIGNAL(clicked()), params, SLOT(setFlashOff()));
+    QObject::connect(flashHalf,SIGNAL(clicked()), params, SLOT(setFlashHalf()));
+    QObject::connect(flashFull,SIGNAL(clicked()), params, SLOT(setFlashFull()));
+    QObject::connect(backCurtain,SIGNAL(toggled(bool)), params, SLOT(setBackCurtain(bool)));
 
     // exposure control
     QButtonGroup* exp = new QButtonGroup(window);
@@ -168,8 +218,6 @@ int main(int argc, char **argv) {
     gainSlider->setMinimum(0);
     gainSlider->setMaximum(1000);
     gainSlider->setValue(500);
-
-    CameraParameters* params = cameraThread->parameters;
 
     QObject::connect(p,SIGNAL(clicked()), expSlider, SLOT(hide()));
     QObject::connect(p,SIGNAL(clicked()), params, SLOT(setExposureModeAuto()));

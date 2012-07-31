@@ -26,7 +26,12 @@ QPushButton#w {
     min-width: 1px;
     border-width: 0px;
     background-color: black;
+    outline: none;
 /*    rgb(12, 14, 3);*/
+}
+
+QPushButton#w:focus{
+    outline: none;
 }
 
 QPushButton#help  {
@@ -47,6 +52,43 @@ QPushButton#sf{
 QPushButton#sf:checked{
     background-image: url("/opt/rawcam/spot.png");
 }
+
+QPushButton#flashFull{
+    background: url("/opt/rawcam/flashFullGrey.png") no-repeat transparent;
+    border: 0 none
+}
+QPushButton#flashFull:checked{
+    background-image: url("/opt/rawcam/flashFull.png");
+}
+
+QPushButton#flashHalf{
+    background: url("/opt/rawcam/flashHalfGrey.png") no-repeat transparent;
+    border: 0 none
+}
+QPushButton#flashHalf:checked{
+    background-image: url("/opt/rawcam/flashHalf.png");
+}
+QPushButton#noflash{
+    background: url("/opt/rawcam/noflashGrey.png") no-repeat transparent;
+    border: 0 none
+}
+QPushButton#noflash:checked{
+    background-image: url("/opt/rawcam/noflash.png");
+}
+QPushButton#backCurtain{
+    background: url("/opt/rawcam/backCurtainGrey.png") no-repeat transparent;
+    border: 0 none
+}
+QPushButton#backCurtain:checked{
+    background-image: url("/opt/rawcam/backCurtain.png");
+}
+QPushButton#gallery{
+    min-width: 50px;
+    min-height: 50px;
+    background: url("/opt/rawcam/gallery.png") no-repeat transparent;
+    border: 0 none
+}
+
 
 
 QLabel {

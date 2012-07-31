@@ -68,6 +68,16 @@ public:
         enum {SINGLE = 0, CONTINUOUS, SHARPEST};
         int mode;
     } burst;
+
+    struct Flash {
+        // burst mode
+        enum {OFF = 0, HALF, FULL};
+        int mode;
+        bool backCurtain;
+    } flash;
+
+    QString lastPicture;
+
     // Emit the changed signal to notify other concerned objects that
     // the camera parameters have changed.
     void notify() {emit changed();}
@@ -95,6 +105,12 @@ public slots:
     void setFocusValue(int);
     void setFocusSpot(int, int);
 
+    void setFlashOff();
+    void setFlashHalf();
+    void setFlashFull();
+    void setBackCurtain(bool);
+
+    void openLastPicture();
 
 signals:
     // A signal signifying that the camera parameters have changed.

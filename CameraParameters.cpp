@@ -2,6 +2,9 @@
 #include "math.h"
 #include "QDebug"
 
+#include <QDesktopServices>
+#include <QUrl>
+
 CameraParameters::CameraParameters() {
     // Set default modes and values
     exposure.mode = Exposure::AUTO;
@@ -13,6 +16,8 @@ CameraParameters::CameraParameters() {
     whiteBalance.mode = WhiteBalance::AUTO;
     whiteBalance.value = 5000;
     burst.mode = Burst::SINGLE;
+    flash.mode = Flash::OFF;
+    flash.backCurtain = false;
 }
 
 CameraParameters::~CameraParameters() {}
@@ -132,4 +137,21 @@ void CameraParameters::setFocusSpot(int x, int y){
     qDebug()<<"setFocusSpot: Setting target to " << x << y;
 }
 
+void CameraParameters::setFlashOff(){
+    this->flash.mode = Flash::OFF;
+}
+void CameraParameters::setFlashHalf(){
+    this->flash.mode = Flash::HALF;
+}
+void CameraParameters::setFlashFull(){
+    this->flash.mode = Flash::FULL;
+}
+
+void CameraParameters::setBackCurtain(bool enabled){
+    this->flash.backCurtain = enabled;
+}
+
+void CameraParameters::openLastPicture(){
+    QDesktopServices::openUrl(QUrl("file://"+this->lastPicture));
+}
 

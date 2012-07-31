@@ -61,6 +61,7 @@ signals:
     void newViewfinderFrame();
     void exposureInfo(QString);
     void gainInfo(QString);
+    void pictureSaved(QString);
 
 protected:
     void run();

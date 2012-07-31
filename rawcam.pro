@@ -47,7 +47,12 @@ INSTALLS    += style
 style.path  = /opt/rawcam/
 style.files  = style.css \
                icon.png \
-               helpBg.png shutter.png halftone.png spot.png spotGrey.png
+               helpBg.png shutter.png halftone.png spot.png spotGrey.png \
+               noflash.png noflashGrey.png \
+               flashFull.png flashFullGrey.png \
+               flashHalf.png flashHalfGrey.png \
+               backCurtain.png backCurtainGrey.png \
+               gallery.png settings.png
 
 
 #

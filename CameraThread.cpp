@@ -13,6 +13,15 @@
 #include "CameraParameters.h"
 //#include "LEDBlinker.h"
 
+//SDK doesn't have these defines
+#ifndef V4L2_CID_FLASH_LED_MODE
+#define V4L2_CID_FLASH_LED_MODE 10225921
+#endif
+
+#ifndef V4L2_FLASH_LED_MODE_FLASH
+#define V4L2_FLASH_LED_MODE_FLASH 1
+#endif
+
 using namespace std;
 
 namespace Plat = FCam::N9;
@@ -34,6 +43,10 @@ void CameraThread::run() {
         printf("Error powering up the sensor.\n");
         return;
     }
+
+
+    // Action (Flash)
+    FCam::Flash::FireAction fire(&flash);
 
     // Make a helper autofocus object
     FCam::AutoFocus autoFocus(&lens);
@@ -66,8 +79,22 @@ void CameraThread::run() {
 
     while (keepGoing) {
 	while (active) {
-    		// stream the viewfinder
-    		sensor.stream(viewfinder);
+        //set flash parameters
+        if (parameters->flash.mode == CameraParameters::Flash::FULL){
+            if (viewfinder.exposure * 1000 > flash.minDuration()) fire.duration = flash.maxDuration();
+            else fire.duration = flash.minDuration();
+        } else {
+            fire.duration = flash.minDuration();
+        }
+        if (parameters->flash.backCurtain == false) fire.time = 0; else fire.time = photo.exposure - fire.duration;
+        if (parameters->flash.mode == CameraParameters::Flash::FULL){
+            fire.brightness = flash.maxBrightness();
+        } else {
+            fire.brightness = flash.minBrightness();
+        }
+
+        // stream the viewfinder
+        sensor.stream(viewfinder);
         if (focus && autoFocus.idle() && parameters->focus.mode == parameters->focus.AUTO) {
 			autoFocus.startSweep();
 			focus = false;
@@ -88,6 +115,8 @@ void CameraThread::run() {
 		    photo.exposure  = viewfinder.exposure;
 		    photo.gain      = viewfinder.gain;
 		    photo.whiteBalance = viewfinder.whiteBalance;
+            if (parameters->flash.mode != CameraParameters::Flash::OFF) photo.addAction(fire);
+
 		    sensor.capture(photo);
 		    takeSnapshot = false;
 		}
@@ -109,16 +138,19 @@ void CameraThread::run() {
 			    printf("Got a full-res frame\n");
 			}
 
-			// Save it as a DNG
-			char fname[256];
-            snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
-				 f.exposureStartTime().toString().c_str());
-			writer.saveDNG(f, fname);
-
-			// Save it as a JPEG too
+            char fname[256];
+            // Save it as a JPEG
             snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
-				 f.exposureStartTime().toString().c_str());
-			writer.saveJPEG(f, fname, 90);
+                 f.exposureStartTime().toString().c_str());
+            writer.saveJPEG(f, fname, 90);
+            parameters->lastPicture = fname;
+            emit pictureSaved(QString(fname));
+
+			// Save it as a DNG
+            snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
+                 f.exposureStartTime().toString().c_str());
+            writer.saveDNG(f, fname);
+
 		    } else if (f.shot().id == viewfinder.id) {
 
 			// update the autofocus and metering algorithms
@@ -129,7 +161,6 @@ void CameraThread::run() {
             if (parameters->exposure.mode == parameters->exposure.AUTO && parameters->gain.mode == parameters->gain.AUTO) {
                 //we auto expose anyway and then modify the values so nothing left to be done here
                 //and i dont want to reverse all the structure
-
             }
             else if (parameters->exposure.mode == parameters->exposure.MANUAL && parameters->gain.mode == parameters->gain.MANUAL) {
                 viewfinder.exposure = int(parameters->exposure.value * 1000000 + 0.5);
