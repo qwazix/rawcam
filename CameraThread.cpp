@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <iostream>
+#include <QQueue>
+#include <qmath.h>
 
 #include "OverlayWidget.h"
 #include "CameraParameters.h"
@@ -44,7 +46,6 @@ void CameraThread::run() {
         return;
     }
 
-
     // Action (Flash)
     FCam::Flash::FireAction fire(&flash);
 
@@ -73,7 +74,7 @@ void CameraThread::run() {
     FCam::Shot photo;
     photo.image = FCam::Image(sensor.maxImageSize(), FCam::RAW, FCam::Image::AutoAllocate);
     
-
+    QQueue<QString> pictureNames;
 //    LEDBlinker blinker;
 //    LEDBlinker::BlinkAction blink(&blinker);
 
@@ -124,7 +125,10 @@ void CameraThread::run() {
 		// Drain the queue
 		FCam::Frame f;
 		do {
-		    f = sensor.getFrame();
+            f = sensor.getFrame();
+            // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
+            //qDebug()<< "before dequeure" <<  pictureNames;
+            if (!pictureNames.isEmpty() && pictureNames.length()*2 > writer.savesPending()) emit pictureSaved(QString(pictureNames.dequeue()));
 
 		    if (f.shot().id == photo.id) {
 			// Our photo came back, asynchronously save it to disk
@@ -138,13 +142,15 @@ void CameraThread::run() {
 			    printf("Got a full-res frame\n");
 			}
 
+
             char fname[256];
             // Save it as a JPEG
             snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
                  f.exposureStartTime().toString().c_str());
             writer.saveJPEG(f, fname, 90);
-            parameters->lastPicture = fname;
-            emit pictureSaved(QString(fname));
+            // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
+            pictureNames.enqueue(QString(fname));
+            //qDebug()<< "after enqueue" <<  pictureNames;
 
 			// Save it as a DNG
             snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),

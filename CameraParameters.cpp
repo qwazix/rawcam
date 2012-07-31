@@ -154,4 +154,7 @@ void CameraParameters::setBackCurtain(bool enabled){
 void CameraParameters::openLastPicture(){
     QDesktopServices::openUrl(QUrl("file://"+this->lastPicture));
 }
+void CameraParameters::setLastPicture(QString lastPic){
+    this->lastPicture = lastPic;
+}
 

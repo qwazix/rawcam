@@ -1,3 +1,8 @@
+rawcam (0.0.5) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 31 Jul 2012 17:18:49 +0300
+
 rawcam (0.0.4) unstable; urgency=low
   * Full manual controls: Auto, Shutter priority, ISO priority, Manual
   * Fixed the flashing under electric lighting bug

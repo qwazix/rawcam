@@ -111,6 +111,7 @@ public slots:
     void setBackCurtain(bool);
 
     void openLastPicture();
+    void setLastPicture(QString);
 
 signals:
     // A signal signifying that the camera parameters have changed.

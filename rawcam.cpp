@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
     // gallery button
     QPushButton* gallery = new QPushButton("", window);
-    gallery->move(780, 55);
+    gallery->move(780, 60);
     gallery->setObjectName("gallery");
     gallery->hide();
 
@@ -92,10 +92,6 @@ int main(int argc, char **argv) {
     shutter->move(750,200);
     shutter->setObjectName("shutter");
     QObject::connect(shutter, SIGNAL(released()), cameraThread, SLOT(snapshot()));
-    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
-
-
-
 
 //    t->setStyleSheet("min-height: 100px;"
 //                          "border-style: outset;"
@@ -128,6 +124,8 @@ int main(int argc, char **argv) {
 
     CameraParameters* params = cameraThread->parameters;
 
+    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
+    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), params, SLOT(setLastPicture(QString)));
     QObject::connect(gallery,SIGNAL(clicked()), params, SLOT(openLastPicture()));
 
     // flash control

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-SDK_DIR=`echo ~/QtSDK`
+SDK_DIR=`echo /opt/QtSDK`
 MADDE_DIR="${SDK_DIR}/Madde"
 MAD="${MADDE_DIR}/bin/mad"
 TARGET="harmattan_10.2011.34-1_rt1.2"
