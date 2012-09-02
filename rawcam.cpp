@@ -113,6 +113,7 @@ int main(int argc, char **argv) {
     exposureInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
     QObject::connect(cameraThread,SIGNAL(exposureInfo(QString)), exposureInfo, SLOT(setText(QString)));
 
+
     //gain info label
     QLabel* gainInfo = new QLabel(window);
     gainInfo->move(700,395);
@@ -239,6 +240,8 @@ int main(int argc, char **argv) {
     QObject::connect(expSlider,SIGNAL(valueChanged(int)), params, SLOT(setExposureValue(int)));
     QObject::connect(gainSlider,SIGNAL(valueChanged(int)), params, SLOT(setGainValue(int)));
 
+    QObject::connect(cameraThread,SIGNAL(exposureChanged(int)), expSlider, SLOT(setValue(int)));
+    QObject::connect(cameraThread,SIGNAL(gainChanged(int)), gainSlider, SLOT(setValue(int)));
 
     // focus control
     QButtonGroup* foc = new QButtonGroup(window);
@@ -299,6 +302,7 @@ int main(int argc, char **argv) {
     help->setFont(QFont("Nokia Pure Text", 20, 200, false));
     help->resize(320,80);
     help->setObjectName("help");
+
 
     QTimer::singleShot(8000, help, SLOT(hide()));
     QObject::connect(help, SIGNAL(clicked()), help, SLOT(hide()));

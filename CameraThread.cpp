@@ -197,9 +197,14 @@ void CameraThread::run() {
                 humanReadableExposure = "1/" + QString::number(1000000 / (viewfinder.exposure));
             }
             emit exposureInfo(humanReadableExposure);
+            if (parameters->exposure.mode == parameters->exposure.AUTO)
+                emit exposureChanged(CameraParameters::getExposureValue((viewfinder.exposure-0.5)/1000000));
             emit gainInfo("ISO "+QString::number(int(viewfinder.gain*100)));
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
+            if (parameters->gain.mode == parameters->gain.AUTO)
+                emit gainChanged((int)(200/(logf(2)/logf(viewfinder.gain))));
             sensor.stream(viewfinder);
+
 			emit newViewfinderFrame();
 		    } else {
 			printf("got some other frame\n");

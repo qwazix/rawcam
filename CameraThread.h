@@ -60,7 +60,9 @@ public slots:
 signals:
     void newViewfinderFrame();
     void exposureInfo(QString);
+    void exposureChanged(int);
     void gainInfo(QString);
+    void gainChanged(int);
     void pictureSaved(QString);
 
 protected:

@@ -91,6 +91,16 @@ void CameraParameters::setExposureValue(int val){
     this->exposure.value = powf((float)val, beta)*alpha + gamma;
 }
 
+int CameraParameters::getExposureValue(float val){
+    float left = 1/8000.0f;
+    float middle = 1/30.0f;
+    float right = 1.0f;
+    float beta = log2f((right-left)/(middle-left));
+    float alpha = (middle + right - 2*left)/(powf(500, beta)+powf(1000, beta));
+    float gamma = left;
+    return (int)abs(powf((val-gamma)/alpha,1/beta));
+}
+
 void CameraParameters::setGainMode(int mode){
     this->gain.mode = mode;
 }

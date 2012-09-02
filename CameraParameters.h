@@ -83,6 +83,8 @@ public:
     void notify() {emit changed();}
 
     QMutex mutex;
+    int static getExposureValue(float);
+
 
 public slots:
     void setExposureMode(int);

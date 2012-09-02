@@ -139,6 +139,14 @@ void OverlayWidget::moveEvent(QMoveEvent *) {
 
 
 OverlayWidget::~OverlayWidget() {
+    old_color_key.trans_key = 0x842;
+    old_color_key.background = 0x0;
+    old_color_key.key_type = OMAPFB_COLOR_KEY_GFX_DST;
+    old_color_key.channel_out = OMAPFB_CHANNEL_OUT_LCD;
+
+    if (ioctl(overlay_fd, OMAPFB_SET_COLOR_KEY, &old_color_key)) {
+        perror("OMAPFB_SET_COLOR_KEY");
+    }
     disable();
     ::close(overlay_fd);
 }
