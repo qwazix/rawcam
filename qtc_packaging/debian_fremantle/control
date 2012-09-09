@@ -2,12 +2,13 @@ Source: rawcam
 Section: user/utilities
 Priority: optional
 Maintainer: Michael Demetriou <qwazix@gmail.com>
-Build-Depends: debhelper (>= 5), libqt4-dev, fcam-dev
+Build-Depends: debhelper (>= 5), libqt4-dev
+#, fcam-dev, libqtm-dev, libjpeg62-dev, libqtm-sensors
 Standards-Version: 3.7.3
 Homepage: <insert the upstream URL, if relevant>
 
 Package: rawcam
-Architecture: any
+Architecture: armel
 Depends: ${shlibs:Depends}, ${misc:Depends}, qt-components-10
 Description: rawcam allows you to capture images in raw
  Rawcam is an advanced camera application that utilizes

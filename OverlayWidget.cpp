@@ -92,8 +92,8 @@ OverlayWidget::OverlayWidget(QWidget *par) : QWidget(par)  {
     if (ioctl(overlay_fd, OMAPFB_SET_UPDATE_MODE, &update_mode) < 0) {
         perror("OMAPFB_SET_UPDATE_MODE");
     }
-    installEventFilter(this);
 #endif
+    installEventFilter(this);
 }
 
 bool OverlayWidget::eventFilter(QObject *, QEvent *event) {

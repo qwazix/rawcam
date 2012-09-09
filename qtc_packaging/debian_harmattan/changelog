@@ -1,3 +1,8 @@
+rawcam (0.0.8) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Sun, 09 Sep 2012 17:49:20 +0300
+
 rawcam (0.0.7) unstable; urgency=low
   * Added N900 support
 
