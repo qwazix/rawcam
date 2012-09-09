@@ -123,6 +123,8 @@ public slots:
     QVariant getSetting(QString, QVariant);
     void setSetting(QString, QVariant);
 
+    bool isN900();
+
 signals:
     // A signal signifying that the camera parameters have changed.
     // The camera thread could connect to change it's behavior through

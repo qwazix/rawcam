@@ -24,6 +24,14 @@
 
 QTM_USE_NAMESPACE
 
+#ifdef Q_WS_MAEMO_5
+#define WIDTH 800
+#define deviceN900 true
+#else
+#define WIDTH 854
+#define deviceN900 false
+#endif
+
 /***********************************************************/
 /* Full camera application                                 */
 /*                                                         */
@@ -87,19 +95,20 @@ int main(int argc, char **argv) {
 
     // gallery button
     QPushButton* gallery = new QPushButton("", window);
-    gallery->move(780, 60);
+    gallery->move(WIDTH - 74, 60);
     gallery->setObjectName("gallery");
     gallery->hide();
 
     // settings button
     QPushButton* settingsBtn = new QPushButton("", window);
-    settingsBtn->move(780, 340);
+    settingsBtn->move(WIDTH - 74, 340);
     settingsBtn->setObjectName("settings");
 
     // shutter button
     QPushButton* shutter = new QPushButton(QIcon("/opt/rawcam/shutter.png"),"",window);
     shutter->setIconSize(QSize(90,90));
-    shutter->move(750,200);
+    shutter->move(WIDTH - 104,200);
+    if (deviceN900) shutter->hide();
     shutter->setObjectName("shutter");
     QObject::connect(shutter, SIGNAL(pressed()), cameraThread, SLOT(focus_on_tap()));
     QObject::connect(shutter, SIGNAL(released()), cameraThread, SLOT(snapshot()));
@@ -119,7 +128,7 @@ int main(int argc, char **argv) {
 
     //exposure info label
     QLabel* exposureInfo = new QLabel(window);
-    exposureInfo->move(720,435);
+    exposureInfo->move(WIDTH - 134,435);
     exposureInfo->setAlignment(Qt::AlignRight);
     exposureInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
     QObject::connect(cameraThread,SIGNAL(exposureInfo(QString)), exposureInfo, SLOT(setText(QString)));
@@ -127,7 +136,7 @@ int main(int argc, char **argv) {
 
     //gain info label
     QLabel* gainInfo = new QLabel(window);
-    gainInfo->move(700,395);
+    gainInfo->move(WIDTH - 154,395);
     gainInfo->resize(120, 30);
     gainInfo->setAlignment(Qt::AlignRight);
     gainInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
@@ -136,28 +145,31 @@ int main(int argc, char **argv) {
 
     CameraParameters* params = cameraThread->parameters;
 
-    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
+    if (!deviceN900) QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
     QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), params, SLOT(setLastPicture(QString)));
     QObject::connect(gallery,SIGNAL(clicked()), params, SLOT(openLastPicture()));
 
     // flash control
+    int adjustWidth = 0;
+    if (deviceN900) adjustWidth = -54;
+
     QButtonGroup* flash = new QButtonGroup(window);
     flash->setExclusive(true);
 
     QPushButton* noflash = new QPushButton("", window);
-    noflash->move(405, 15);
+    noflash->move(405+adjustWidth, 15);
     noflash->setObjectName("noflash");
     noflash->setCheckable(true);
     noflash->setChecked(true);
 
     QPushButton* flashHalf = new QPushButton("", window);
-    flashHalf->move(450, 15);
+    flashHalf->move(450+adjustWidth, 15);
     flashHalf->setObjectName("flashHalf");
     flashHalf->setCheckable(true);
     flashHalf->setChecked(false);
 
     QPushButton* flashFull = new QPushButton("", window);
-    flashFull->move(495, 15);
+    flashFull->move(495+adjustWidth, 15);
     flashFull->setObjectName("flashFull");
     flashFull->setCheckable(true);
     flashFull->setChecked(false);
@@ -167,7 +179,7 @@ int main(int argc, char **argv) {
     flash->addButton(flashFull);
 
     QPushButton* backCurtain = new QPushButton("", window);
-    backCurtain->move(555, 15);
+    backCurtain->move(555+adjustWidth, 15);
     backCurtain->setObjectName("backCurtain");
     backCurtain->setCheckable(true);
     backCurtain->setChecked(false);
@@ -260,12 +272,12 @@ int main(int argc, char **argv) {
 
     QPushButton* af = new QPushButton("AF", window);
     af->setFont(QFont("Nokia Pure Text", 30, 200, false));
-    af->move(670, 10);
+    af->move(670+adjustWidth, 10);
     af->setCheckable(true);
     af->setChecked(true);
 
     QPushButton* sf = new QPushButton("", window);
-    sf->move(725, 15);
+    sf->move(725+adjustWidth, 15);
     sf->setObjectName("sf");
     sf->setIconSize(QSize(32,32));
     sf->setCheckable(true);
@@ -277,7 +289,7 @@ int main(int argc, char **argv) {
 
     QPushButton* mf = new QPushButton("MF", window);
     mf->setFont(QFont("Nokia Pure Text", 30, 200, false));
-    mf->move(780,10);
+    mf->move(780+adjustWidth,10);
     mf->setCheckable(true);
     mf->setChecked(false);
 
@@ -356,6 +368,8 @@ int main(int argc, char **argv) {
 
     // Once the camera thread stops, quit the app
     QObject::connect(cameraThread, SIGNAL(finished()),
+                     &app, SLOT(quit()));
+    QObject::connect(cameraThread, SIGNAL(lensCoverClosed()),
                      &app, SLOT(quit()));
     
     // Connect activate and deactivate events to camerathread

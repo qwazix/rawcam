@@ -1,3 +1,8 @@
+rawcam (0.0.7) unstable; urgency=low
+  * Added N900 support
+
+ -- Michael Demetriou <qwazix@unknown>  Sun, 09 Sep 2012 15:47:25 +0300
+
 rawcam (0.0.6) unstable; urgency=low
   * Switching to manual mode from auto keeps current values
 

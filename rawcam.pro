@@ -40,9 +40,11 @@ INSTALLS += syspart
 syspart.path = /usr/share/policy/etc/syspart.conf.d
 syspart.files = rawcam.syspart.conf
 
-INSTALLS    += desktop
-desktop.path  = /usr/share/applications/
-desktop.files  = rawcam.desktop
+contains(MEEGO_EDITION,harmattan) {
+    INSTALLS    += desktop
+    desktop.path  = /usr/share/applications/
+    desktop.files  = rawcam.desktop
+}
 
 INSTALLS    += style
 style.path  = /opt/rawcam/
@@ -80,11 +82,26 @@ OTHER_FILES += \
     qtc_packaging/debian_harmattan/compat \
     qtc_packaging/debian_harmattan/changelog \
     style.css \
-    settings.qml
+    settings.qml \
+    qtc_packaging/debian_fremantle/rules \
+    qtc_packaging/debian_fremantle/README \
+    qtc_packaging/debian_fremantle/copyright \
+    qtc_packaging/debian_fremantle/control \
+    qtc_packaging/debian_fremantle/compat \
+    qtc_packaging/debian_fremantle/changelog
 
 
 contains(MEEGO_EDITION,harmattan) {
     icon.files = rawcam.png
     icon.path = /usr/share/icons/hicolor/80x80/apps
     INSTALLS += icon
+}
+
+maemo5 {
+    icon.files = rawcam.png
+    icon.path = /usr/share/icons/hicolor/96x96/apps
+    INSTALLS += icon
+    INSTALLS    += desktop
+    desktop.path  = /usr/share/applications/hildon
+    desktop.files  = rawcam.desktop
 }

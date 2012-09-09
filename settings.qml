@@ -40,7 +40,7 @@ Rectangle {
 
             Switch {
                 id: helpSw
-                checked: params.getSetting("showHelp",true);
+                checked: params.getSetting("showHelp",!params.isN900());
                 onCheckedChanged: params.setSetting("showHelp",checked)
             }
 
@@ -61,7 +61,7 @@ Rectangle {
 
             Switch {
                 id: focusOnTapSw
-                checked: params.getSetting("focusOnTap",false);
+                checked: params.getSetting("focusOnTap",params.isN900());
                 onCheckedChanged: params.setSetting("focusOnTap",checked)
             }
 

@@ -6,7 +6,14 @@
 #include <QThread>
 #include <QSemaphore>
 #include <stdio.h>
+#ifdef Q_WS_MAEMO_5
+#include <FCam/N900.h>
+#define deviceN900 true
+#else
+#define deviceN900 false
 #include <FCam/N9.h>
+#endif
+
 #include "CameraParameters.h"
 #include <QString>
 #include <QSettings>
@@ -56,9 +63,10 @@ public slots:
 
     void focus_on_tap() {
         QSettings settings;
-        if(settings.value("focusOnTap",false) == true) focus = true;
+        bool defaultFocusOnTap = deviceN900;
+        if(settings.value("focusOnTap",defaultFocusOnTap) == true) focus = true;
     }
-	    
+
     void snapshot() {
         takeSnapshot = true;
     }
@@ -70,6 +78,7 @@ signals:
     void gainInfo(QString);
     void gainChanged(int);
     void pictureSaved(QString);
+    void lensCoverClosed();
 
 protected:
     void run();

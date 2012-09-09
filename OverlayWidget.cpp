@@ -5,7 +5,11 @@
 #include <unistd.h>
 #include <QPaintEvent>
 
+#ifdef Q_WS_MAEMO_5
+#define WIDTH 800
+#else
 #define WIDTH 854
+#endif
 #define HEIGHT 480
 
 OverlayWidget::OverlayWidget(QWidget *par) : QWidget(par)  {
@@ -81,13 +85,15 @@ OverlayWidget::OverlayWidget(QWidget *par) : QWidget(par)  {
     if (ioctl(overlay_fd, OMAPFB_SET_COLOR_KEY, &color_key)) {
         perror("OMAPFB_SET_COLOR_KEY");
     }
-
+#ifdef Q_WS_MAEMO_5
+#else
     // Set the update mode to manual
     int update_mode = OMAPFB_MANUAL_UPDATE;
     if (ioctl(overlay_fd, OMAPFB_SET_UPDATE_MODE, &update_mode) < 0) {
         perror("OMAPFB_SET_UPDATE_MODE");
     }
     installEventFilter(this);
+#endif
 }
 
 bool OverlayWidget::eventFilter(QObject *, QEvent *event) {
@@ -175,8 +181,8 @@ void OverlayWidget::enable() {
     plane_info.enabled = 1;
     plane_info.pos_x = xoff;
     plane_info.pos_y = yoff;
-    plane_info.out_width = WIDTH - xcrop;
-    plane_info.out_height = HEIGHT - ycrop;
+    plane_info.out_width = WIDTH - xcrop - xoff;
+    plane_info.out_height = HEIGHT - ycrop - yoff;
 
     if (ioctl(overlay_fd, OMAPFB_SETUP_PLANE, &plane_info)) {
         perror("OMAPFB_SETUP_PLANE");

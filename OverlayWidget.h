@@ -5,7 +5,11 @@
 #include <QX11Info>
 
 #define __user
+#ifdef Q_WS_MAEMO_5
+#include "omapfb.h"
+#else
 #include <linux/omapfb.h>
+#endif
 #include <stdio.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>

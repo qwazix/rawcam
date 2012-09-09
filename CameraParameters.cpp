@@ -191,3 +191,10 @@ void CameraParameters::setSetting(QString key, QVariant val){
     settings.setValue(key, val);
 }
 
+bool CameraParameters::isN900(){
+#ifdef Q_WS_MAEMO_5
+    return true;
+#else
+    return false;
+#endif
+}

@@ -3,9 +3,11 @@
 #include <qmetatype.h>
 #include "CameraThread.h"
 #include <QDebug>
-
+#ifdef Q_WS_MAEMO_5
+#include <FCam/N900.h>
+#else
 #include <FCam/N9.h>
-
+#endif
 #include <vector>
 #include <iostream>
 #include <QQueue>
@@ -26,8 +28,11 @@
 #endif
 
 using namespace std;
-
+#ifdef Q_WS_MAEMO_5
+namespace Plat = FCam::N900;
+#else
 namespace Plat = FCam::N9;
+#endif
 
 void CameraThread::run() {
     // Make an asynchronous file writer to save images in the background
@@ -41,11 +46,14 @@ void CameraThread::run() {
     sensor.attach(&flash);
     sensor.attach(&lens);
 
+#ifdef Q_WS_MAEMO_5
+#else
     // Explicitly power up the sensor
     if (sensor.initialize(0) == -1){
         printf("Error powering up the sensor.\n");
         return;
     }
+#endif
 
     // Action (Flash)
     FCam::Flash::FireAction fire(&flash);
@@ -82,6 +90,63 @@ void CameraThread::run() {
 
     while (keepGoing) {
 	while (active) {
+    #ifdef Q_WS_MAEMO_5
+        FCam::Event e;
+                while (FCam::getNextEvent(&e)) {
+                    switch(e.type) {
+                    case FCam::Event::Error:
+                        printf("FCam Error: %s\n", e.description.c_str());
+                        if (e.data == FCam::Event::DriverLockedError || e.data == FCam::Event::DriverMissingError) {
+//                            emit panic(e);
+                            sensor.stop();
+//                            exitLock.lock();
+                            printf("Terminating\n");
+                            return;
+                        }
+                        break;
+                    case FCam::Event::Warning:
+                        printf("FCam Warning: %s\n", e.description.c_str());
+                        break;
+                    case FCam::Event::FocusPressed:
+                        if (autoFocus.idle()) {
+                            if (parameters->focus.mode == CameraParameters::Focus::AUTO) {
+                                autoFocus.setTarget(FCam::Rect(0, 0, 640, 480));
+                                autoFocus.startSweep();
+                            } else if (parameters->focus.mode == CameraParameters::Focus::SPOT) {
+                                int x = parameters->focus.spot.x();
+                                int y = parameters->focus.spot.y();
+                                printf("Setting target to %d %d\n", x, y);
+                                autoFocus.setTarget(FCam::Rect(x-15, y-15, 30, 30));
+                                autoFocus.startSweep();
+                            }
+                        }
+
+
+//                        halfDepress = true;
+                        break;
+//                    case FCam::Event::FocusReleased:
+//                        emit focusReleased();
+//                        halfDepress = false;
+//                        break;
+                    case FCam::Event::ShutterPressed:
+//                        emit shutterPressed();
+                        takeSnapshot = true;
+//                        fullDepress = true;
+                        break;
+//                    case FCam::Event::ShutterReleased:
+//                        emit shutterReleased();
+//                        fullDepress = false;
+//                        break;
+                    case FCam::Event::N900LensClosed:
+                        emit lensCoverClosed();
+                        break;
+//                    case FCam::Event::N900LensOpened:
+//                        emit lensCoverOpened();
+//                        break;
+                    };
+                }
+#endif
+
         //set flash parameters
         if (parameters->flash.mode == CameraParameters::Flash::FULL){
             if (viewfinder.exposure * 1000 > flash.minDuration()) fire.duration = flash.maxDuration();
