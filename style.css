@@ -89,6 +89,13 @@ QPushButton#gallery{
     border: 0 none
 }
 
+QPushButton#settings{
+    min-width: 50px;
+    min-height: 50px;
+    background: url("/opt/rawcam/settings.png") no-repeat transparent;
+    border: 0 none
+}
+
 
 
 QLabel {

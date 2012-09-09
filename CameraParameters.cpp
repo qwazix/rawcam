@@ -4,6 +4,7 @@
 
 #include <QDesktopServices>
 #include <QUrl>
+#include <QSettings>
 
 CameraParameters::CameraParameters() {
     // Set default modes and values
@@ -101,6 +102,18 @@ int CameraParameters::getExposureValue(float val){
     return (int)abs(powf((val-gamma)/alpha,1/beta));
 }
 
+void CameraParameters::setExposureCompensation(float compensation){
+    this->exposure.compensation = compensation;
+}
+
+void CameraParameters::setWhiteBalance(int wb){
+    this->whiteBalance.value = wb;
+}
+
+void CameraParameters::setWhiteBalanceMode(int wbmode){
+    this->whiteBalance.mode = wbmode;
+}
+
 void CameraParameters::setGainMode(int mode){
     this->gain.mode = mode;
 }
@@ -166,5 +179,15 @@ void CameraParameters::openLastPicture(){
 }
 void CameraParameters::setLastPicture(QString lastPic){
     this->lastPicture = lastPic;
+}
+
+QVariant CameraParameters::getSetting(QString key, QVariant defaultval){
+    QSettings settings;
+    return settings.value(key, defaultval);
+}
+
+void CameraParameters::setSetting(QString key, QVariant val){
+    QSettings settings;
+    settings.setValue(key, val);
 }
 

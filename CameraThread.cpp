@@ -10,6 +10,7 @@
 #include <iostream>
 #include <QQueue>
 #include <qmath.h>
+#include <QSettings>
 
 #include "OverlayWidget.h"
 #include "CameraParameters.h"
@@ -65,6 +66,7 @@ void CameraThread::run() {
     viewfinder.histogram.region = FCam::Rect(0, 0, 640, 480);
     viewfinder.sharpness.enabled = true;
     viewfinder.sharpness.size = FCam::Size(16, 12);
+    viewfinder.whiteBalance = parameters->whiteBalance.value;
 
     // A full res photograph. We'll set the exposure, frameTime, and
     // gain later, after we meter. Default parameters apply (no
@@ -115,7 +117,7 @@ void CameraThread::run() {
 		    // use the metering the viewfinder has been doing
 		    photo.exposure  = viewfinder.exposure;
 		    photo.gain      = viewfinder.gain;
-		    photo.whiteBalance = viewfinder.whiteBalance;
+            photo.whiteBalance = viewfinder.whiteBalance;
             if (parameters->flash.mode != CameraParameters::Flash::OFF) photo.addAction(fire);
 
 		    sensor.capture(photo);
@@ -128,41 +130,47 @@ void CameraThread::run() {
             f = sensor.getFrame();
             // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
             //qDebug()<< "before dequeure" <<  pictureNames;
-            if (!pictureNames.isEmpty() && pictureNames.length()*2 > writer.savesPending()) emit pictureSaved(QString(pictureNames.dequeue()));
+            if (!pictureNames.isEmpty() && pictureNames.length() > writer.savesPending()) {
+                QString newFile = QString(pictureNames.dequeue());
+                if (newFile.endsWith(".jpg")) emit pictureSaved(newFile);
+            }
 
 		    if (f.shot().id == photo.id) {
-			// Our photo came back, asynchronously save it to disk
-			// with a unique filename. We use the exposure start
-			// time for now just so we don't have to keep a
-			// globally unique numbering.
-			if (!f.image().valid()) {
-			    printf("ERROR: Photo dropped!\n");
-			    continue;
-			} else {
-			    printf("Got a full-res frame\n");
-			}
+                // Our photo came back, asynchronously save it to disk
+                // with a unique filename. We use the exposure start
+                // time for now just so we don't have to keep a
+                // globally unique numbering.
+                if (!f.image().valid()) {
+                    printf("ERROR: Photo dropped!\n");
+                    continue;
+                } else {
+                    printf("Got a full-res frame\n");
+                }
 
+                QSettings settings;
+                char fname[256];
+                // Save it as a JPEG
+                snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
+                     f.exposureStartTime().toString().c_str());
+                writer.saveJPEG(f, fname, 90);
+                // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
+                pictureNames.enqueue(QString(fname));
+                //qDebug()<< "after enqueue" <<  pictureNames;
 
-            char fname[256];
-            // Save it as a JPEG
-            snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
+                // Save it as a DNG
+                snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
                  f.exposureStartTime().toString().c_str());
-            writer.saveJPEG(f, fname, 90);
-            // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
-            pictureNames.enqueue(QString(fname));
-            //qDebug()<< "after enqueue" <<  pictureNames;
-
-			// Save it as a DNG
-            snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
-                 f.exposureStartTime().toString().c_str());
-            writer.saveDNG(f, fname);
+                if (settings.value("saveDng",true)== true) {
+                    writer.saveDNG(f, fname);
+                    pictureNames.enqueue(QString(fname));
+                }
 
 		    } else if (f.shot().id == viewfinder.id) {
 
 			// update the autofocus and metering algorithms
             autoFocus.update(f);
 
-            autoExpose(&viewfinder, f, sensor.maxGain(),  sensor.maxExposure(), 0.5);
+            autoExpose(&viewfinder, f, sensor.maxGain(),  sensor.maxExposure(), 0.5);//, parameters->exposure.compensation);
 
             if (parameters->exposure.mode == parameters->exposure.AUTO && parameters->gain.mode == parameters->gain.AUTO) {
                 //we auto expose anyway and then modify the values so nothing left to be done here
@@ -188,7 +196,8 @@ void CameraThread::run() {
                     viewfinder.gain = newGain;
                 }
             }
-			autoWhiteBalance(&viewfinder, f);
+            if (parameters->whiteBalance.mode == parameters->whiteBalance.AUTO) autoWhiteBalance(&viewfinder, f);
+            else viewfinder.whiteBalance = parameters->whiteBalance.value;
 
             QString humanReadableExposure;
             if (viewfinder.exposure >= 1000000) {

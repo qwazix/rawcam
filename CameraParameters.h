@@ -5,6 +5,7 @@
 #include <QMutex>
 #include <QString>
 #include <QPoint>
+#include <QVariant>
 
 /* The requested state of the camera. All communication between the UI
  * and the camera control thread passes through a single instance of
@@ -30,6 +31,7 @@ public:
         float value;
         // If in HDR mode, how many shots to take
         int hdrShots;
+        float compensation;
 
         QString toString(float val);
     } exposure;
@@ -92,6 +94,7 @@ public slots:
     void setExposureModeMan();
     void setExposureValue(float);
     void setExposureValue(int);
+    void setExposureCompensation(float);
 
     void setGainMode(int);
     void setGainModeAuto();
@@ -107,6 +110,9 @@ public slots:
     void setFocusValue(int);
     void setFocusSpot(int, int);
 
+    void setWhiteBalance(int);
+    void setWhiteBalanceMode(int);
+
     void setFlashOff();
     void setFlashHalf();
     void setFlashFull();
@@ -114,6 +120,8 @@ public slots:
 
     void openLastPicture();
     void setLastPicture(QString);
+    QVariant getSetting(QString, QVariant);
+    void setSetting(QString, QVariant);
 
 signals:
     // A signal signifying that the camera parameters have changed.

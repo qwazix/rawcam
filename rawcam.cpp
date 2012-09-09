@@ -12,6 +12,9 @@
 #include <QSlider>
 #include <QDebug>
 #include <QSettings>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeContext>
+#include <QPropertyAnimation>
 
 #include "CameraThread.h"
 #include "ExampleOverlayWidget.h"
@@ -55,10 +58,12 @@ QString readFile(QString filename) {
 
 int main(int argc, char **argv) {
     QApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("oob");
+    QCoreApplication::setApplicationName("rawcam");
 
     // Make the main window
     QWidget *window = new QWidget;
-    QSettings settings("oob", "rawcam");
+    QSettings settings;
 
     QHBoxLayout *layout = new QHBoxLayout(window);
     layout->setContentsMargins(0, 0, 0, 0);
@@ -86,11 +91,17 @@ int main(int argc, char **argv) {
     gallery->setObjectName("gallery");
     gallery->hide();
 
+    // settings button
+    QPushButton* settingsBtn = new QPushButton("", window);
+    settingsBtn->move(780, 340);
+    settingsBtn->setObjectName("settings");
+
     // shutter button
     QPushButton* shutter = new QPushButton(QIcon("/opt/rawcam/shutter.png"),"",window);
     shutter->setIconSize(QSize(90,90));
     shutter->move(750,200);
     shutter->setObjectName("shutter");
+    QObject::connect(shutter, SIGNAL(pressed()), cameraThread, SLOT(focus_on_tap()));
     QObject::connect(shutter, SIGNAL(released()), cameraThread, SLOT(snapshot()));
 
 //    t->setStyleSheet("min-height: 100px;"
@@ -103,7 +114,7 @@ int main(int argc, char **argv) {
 
     MyProximitySensor *prx = new MyProximitySensor();
     QObject::connect(prx, SIGNAL(sensorClosed()), cameraThread, SLOT(focus_on()));
-    QObject::connect(prx, SIGNAL(sensorOpen()), cameraThread, SLOT(focus_off()));
+//    QObject::connect(prx, SIGNAL(sensorOpen()), cameraThread, SLOT(focus_off()));
     prx->start();
 
     //exposure info label
@@ -302,7 +313,29 @@ int main(int argc, char **argv) {
     help->setFont(QFont("Nokia Pure Text", 20, 200, false));
     help->resize(320,80);
     help->setObjectName("help");
+    if (settings.value("showHelp",true)==false) help->hide();
 
+    QDeclarativeView *qmlView = new QDeclarativeView(window);
+    qmlView->rootContext()->setContextProperty("params", params);
+    qmlView->setSource(QUrl::fromLocalFile("/opt/rawcam/settings.qml"));
+    qmlView->hide();
+//    qmlView->resize(700,350);
+    qmlView->move(60, 0);
+    QObject::connect(settingsBtn,SIGNAL(clicked()), qmlView, SLOT(show()));
+    //QObject::connect(overlay, SIGNAL(focus(int, int)), qmlView, SLOT(hide()));
+
+    QPropertyAnimation openani(qmlView, "geometry");
+    openani.setDuration(200);
+    openani.setStartValue(QRect(60, 0, 700, 0));
+    openani.setEndValue(QRect(60, 0, 700, 350));
+    QObject::connect(settingsBtn,SIGNAL(clicked()), &openani, SLOT(start()));
+
+    QPropertyAnimation closeani(qmlView, "geometry");
+    closeani.setDuration(200);
+    closeani.setStartValue(QRect(60, 0, 700, 350));
+    closeani.setEndValue(QRect(60, 0, 700, 0));
+    QObject::connect(overlay, SIGNAL(focus(int, int)), &closeani, SLOT(start()));
+    QObject::connect(&closeani, SIGNAL(finished()), qmlView, SLOT(hide()));
 
     QTimer::singleShot(8000, help, SLOT(hide()));
     QObject::connect(help, SIGNAL(clicked()), help, SLOT(hide()));

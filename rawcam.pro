@@ -8,6 +8,7 @@ INCLUDEPATH += ../../include
 
 
 CONFIG += debug warn_on
+QT += declarative
 
 CONFIG += qt mobility
 LIBS += -lpthread -L../.. -ljpeg -lFCam
@@ -52,7 +53,7 @@ style.files  = style.css \
                flashFull.png flashFullGrey.png \
                flashHalf.png flashHalfGrey.png \
                backCurtain.png backCurtainGrey.png \
-               gallery.png settings.png
+               gallery.png settings.png settings.qml
 
 
 #

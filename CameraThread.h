@@ -9,6 +9,7 @@
 #include <FCam/N9.h>
 #include "CameraParameters.h"
 #include <QString>
+#include <QSettings>
 
 class OverlayWidget;
 
@@ -51,6 +52,11 @@ public slots:
 
     void focus_on() {
         focus = true;
+    }
+
+    void focus_on_tap() {
+        QSettings settings;
+        if(settings.value("focusOnTap",false) == true) focus = true;
     }
 	    
     void snapshot() {
