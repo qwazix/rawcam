@@ -1,3 +1,13 @@
+rawcam (0.0.8) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 18 Sep 2012 09:51:04 +0300
+
+rawcam (0.0.7) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 18 Sep 2012 09:51:03 +0300
+
 rawcam (0.0.6) unstable; urgency=low
   * Switching to manual mode from auto keeps current values
 
