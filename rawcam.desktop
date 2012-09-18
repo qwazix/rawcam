@@ -3,7 +3,7 @@ Encoding=UTF-8
 Version=1.0
 Type=Application
 Name=ρcam
-Exec=/usr/bin/invoker --type=d -s /opt/rawcam/bin/rawcam
+Exec=/usr/bin/invoker --type=e -s /opt/rawcam/bin/rawcam
 Icon=/usr/share/icons/hicolor/80x80/apps/rawcam.png
 X-HildonDesk-ShowInToolbar=true
 X-Osso-Type=application/x-executable
