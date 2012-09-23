@@ -8,7 +8,7 @@
     <credential name="GRP::users" />
     <credential name="GRP::video" />
     <credential name="GRP::pulse-access" />
-    <for path="/usr/bin/rawcam" />
+    <for path="/opt/rawcam/bin/rawcam" />
   </request>
 </aegis>
 

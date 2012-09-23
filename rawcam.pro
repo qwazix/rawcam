@@ -34,7 +34,7 @@ DESTDIR     = build
 
 
 INSTALLS += target
-target.path = /usr/bin/
+target.path = /opt/rawcam/bin/
 
 INSTALLS += syspart
 syspart.path = /usr/share/policy/etc/syspart.conf.d
