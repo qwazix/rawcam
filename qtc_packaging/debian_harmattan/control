@@ -1,5 +1,5 @@
 Source: rawcam
-Section: user/other
+Section: user/multimedia
 Priority: optional
 Maintainer: Michael Demetriou <qwazix@unknown>
 Build-Depends: debhelper (>= 7), pkg-config,
