@@ -17,6 +17,7 @@
 #include "CameraParameters.h"
 #include <QString>
 #include <QSettings>
+#include "feedback.h"
 
 class OverlayWidget;
 
@@ -25,15 +26,15 @@ class CameraThread : public QThread {
 
 public:
     CameraParameters* parameters;
+    feedBack feedback;
     FCam::AsyncFileWriter writer;
     CameraThread(OverlayWidget *o, QObject *parent = NULL) : QThread(parent) {
         overlay = o;
         keepGoing = true;
-	focus = false;
-	active = true;
-	cameralock = new QSemaphore(1);
-    parameters = new CameraParameters;
-
+        focus = false;
+        active = true;
+        cameralock = new QSemaphore(1);
+        parameters = new CameraParameters;
     }
 
 

@@ -16,6 +16,7 @@
 
 #include "OverlayWidget.h"
 #include "CameraParameters.h"
+#include "feedback.h"
 //#include "LEDBlinker.h"
 
 //SDK doesn't have these defines
@@ -184,6 +185,9 @@ void CameraThread::run() {
 		    photo.gain      = viewfinder.gain;
             photo.whiteBalance = viewfinder.whiteBalance;
             if (parameters->flash.mode != CameraParameters::Flash::OFF) photo.addAction(fire);
+            else photo.clearActions();
+            feedback.time = photo.exposure;
+            photo.addAction(feedback);
 
 		    sensor.capture(photo);
 		    takeSnapshot = false;
