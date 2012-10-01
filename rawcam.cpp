@@ -21,6 +21,7 @@
 #include "myproximitysensor.h"
 #include "CameraParameters.h"
 #include "dot.h"
+#include "feedback.h"
 
 QTM_USE_NAMESPACE
 
@@ -133,6 +134,19 @@ int main(int argc, char **argv) {
     gainInfo->setFont(QFont("Nokia Pure Text", 20, 200, false));
     QObject::connect(cameraThread,SIGNAL(gainInfo(QString)), gainInfo, SLOT(setText(QString)));
 
+    //photo captured notification
+    QLabel* success = new QLabel("Photo captured",window);
+    success->move(50,50);
+    success->resize(754, 50);
+    success->setFont(QFont("Nokia Pure Text", 20, 200, false));
+    success->hide();
+    success->setObjectName("success");
+    QTimer* successTimer = new QTimer();
+    successTimer->setSingleShot(true);
+    successTimer->setInterval(4000);
+    QObject::connect(successTimer, SIGNAL(timeout()), success, SLOT(hide()));
+    QObject::connect(cameraThread->feedback.msgr,SIGNAL(photoTaken()), success, SLOT(show()));
+    QObject::connect(cameraThread->feedback.msgr,SIGNAL(photoTaken()), successTimer, SLOT(start()));
 
     CameraParameters* params = cameraThread->parameters;
 
@@ -377,5 +391,6 @@ int main(int argc, char **argv) {
     app.exec();
 
     while (cameraThread->writer.savesPending() > 0) sleep(1);
+    delete cameraThread;
 }
 

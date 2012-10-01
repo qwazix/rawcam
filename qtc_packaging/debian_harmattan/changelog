@@ -1,3 +1,9 @@
+rawcam (1.0.0) unstable; urgency=low
+  * Feedback when photo taken
+  * Overlay bug finally fixed
+
+ -- Michael Demetriou <qwazix@unknown>  Mon, 01 Oct 2012 22:23:38 +0300
+
 rawcam (0.0.9) unstable; urgency=low
   * Optified and called through invoker
 

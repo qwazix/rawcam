@@ -18,12 +18,14 @@ HEADERS += OverlayWidget.h CameraThread.h ExampleOverlayWidget.h \
     myproximitysensor.h \
     CameraParameters.h \
     LEDBlinker.h \
-    dot.h
+    dot.h \
+    feedback.h
 SOURCES += rawcam.cpp OverlayWidget.cpp CameraThread.cpp ExampleOverlayWidget.cpp \
     myproximitysensor.cpp \
     CameraParameters.cpp \
     LEDBlinker.cpp \
-    dot.cpp
+    dot.cpp \
+    feedback.cpp
 
 
 
@@ -53,6 +55,7 @@ style.files  = style.css \
                flashFull.png flashFullGrey.png \
                flashHalf.png flashHalfGrey.png \
                backCurtain.png backCurtainGrey.png \
+               halftoneBlack.png \
                gallery.png settings.png settings.qml
 
 

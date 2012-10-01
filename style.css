@@ -144,3 +144,8 @@ QSlider::groove:vertical {
      margin: 0 -6px; /* handle is placed by default on the contents rect of the groove. Expand outside the groove */
      border-radius: 15px;
  }
+
+QLabel#success{
+    border: 2px solid white;
+    background: url(/opt/rawcam/halftoneBlack.png);
+}
