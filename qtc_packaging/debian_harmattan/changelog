@@ -1,3 +1,4 @@
+
 rawcam (1.0.0) unstable; urgency=low
   * Feedback when photo taken
   * Overlay bug finally fixed
