@@ -78,6 +78,11 @@ public:
         bool backCurtain;
     } flash;
 
+    struct Aspect {
+        enum {FOURTHIRDS = 0, WIDE};
+        int mode;
+    };
+
     QString lastPicture;
 
     // Emit the changed signal to notify other concerned objects that

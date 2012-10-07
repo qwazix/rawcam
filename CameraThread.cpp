@@ -82,6 +82,8 @@ void CameraThread::run() {
     // histograms or sharpness), image memory auto allocated for each
     // new photograph, so that we can have multiple unique photographs
     // saving at once.
+
+    //FCam::Size (3552,2000)
     FCam::Shot photo;
     photo.image = FCam::Image(sensor.maxImageSize(), FCam::RAW, FCam::Image::AutoAllocate);
     

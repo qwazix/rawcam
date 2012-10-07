@@ -7,6 +7,7 @@
 #include <QVBoxLayout>
 #include <QSlider>
 #include <QFile>
+#include <QDir>
 #include <QTimer>
 #include <QButtonGroup>
 #include <QSlider>
@@ -82,6 +83,13 @@ int main(int argc, char **argv) {
 
 
     ExampleOverlayWidget *overlay = new ExampleOverlayWidget();
+
+    //create folders if they don't exist
+    if(!QFile::exists(getenv("HOME") + QString("/MyDocs/DCIM/"))) {
+        QDir *mydir = new QDir();
+        mydir->mkdir(getenv("HOME") + QString("/MyDocs/DCIM/"));
+        delete mydir;
+    }
 
     // Make a thread that controls the camera
     CameraThread* cameraThread = new CameraThread(overlay);

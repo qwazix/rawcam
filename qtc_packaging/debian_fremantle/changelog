@@ -1,3 +1,20 @@
+rawcam (1.0.1) unstable; urgency=low
+  * Folder DCIM is created automatically
+  * Fixed dependencies
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 02 Oct 2012 22:29:14 +0300
+
+rawcam (1.0.0) unstable; urgency=low
+  * Feedback when photo taken
+  * Overlay bug finally fixed
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 02 Oct 2012 22:29:11 +0300
+
+rawcam (0.0.0) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Tue, 02 Oct 2012 22:29:09 +0300
+
 rawcam (0.0.8) unstable; urgency=low
   * Fixed taps on viewfinder
 

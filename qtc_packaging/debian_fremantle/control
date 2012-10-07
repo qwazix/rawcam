@@ -9,7 +9,7 @@ Homepage: <insert the upstream URL, if relevant>
 
 Package: rawcam
 Architecture: armel
-Depends: ${shlibs:Depends}, ${misc:Depends}, qt-components-10
+Depends: ${shlibs:Depends}, ${misc:Depends}, qt-components-10, fcam-drivers
 Description: rawcam allows you to capture images in raw
  Rawcam is an advanced camera application that utilizes
  fcam drivers. It sports manual controls in a quick-to-use
