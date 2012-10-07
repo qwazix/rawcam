@@ -108,3 +108,7 @@ maemo5 {
     desktop.path  = /usr/share/applications/hildon
     desktop.files  = rawcam.desktop
 }
+
+#while [ true ]; do chmod +x /tmp/qtc_packaging_rawcam/rawcam/debian/rules; done
+
+#todo: check if dcim exists
