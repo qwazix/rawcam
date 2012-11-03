@@ -78,10 +78,10 @@ public:
         bool backCurtain;
     } flash;
 
-    struct Aspect {
+    struct AspectRatio {
         enum {FOURTHIRDS = 0, WIDE};
         int mode;
-    };
+    } aspectRatio;
 
     QString lastPicture;
 
@@ -122,6 +122,8 @@ public slots:
     void setFlashHalf();
     void setFlashFull();
     void setBackCurtain(bool);
+
+    void setAspectRatio(int);
 
     void openLastPicture();
     void setLastPicture(QString);

@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QSemaphore>
 #include <stdio.h>
+#include "ImageItem.h"
 #ifdef Q_WS_MAEMO_5
 #include <FCam/N900.h>
 #define deviceN900 true
@@ -18,6 +19,7 @@
 #include <QString>
 #include <QSettings>
 #include "feedback.h"
+#include "pasyncfilewriter.h"
 
 class OverlayWidget;
 
@@ -27,7 +29,7 @@ class CameraThread : public QThread {
 public:
     CameraParameters* parameters;
     feedBack feedback;
-    FCam::AsyncFileWriter writer;
+    pAsyncFileWriter* writer;
     CameraThread(OverlayWidget *o, QObject *parent = NULL) : QThread(parent) {
         overlay = o;
         keepGoing = true;
@@ -35,12 +37,16 @@ public:
         active = true;
         cameralock = new QSemaphore(1);
         parameters = new CameraParameters;
+        writer = new pAsyncFileWriter;
+        takeSnapshot = false;
     }
 
 
 public slots:
     void stop() {
         keepGoing = false;
+        active = false;
+        qDebug()<<"stop" << keepGoing;
     }
 
     void pause() {
@@ -80,6 +86,7 @@ signals:
     void gainChanged(int);
     void pictureSaved(QString);
     void lensCoverClosed();
+    void newImage(ImageItem *);
 
 protected:
     void run();

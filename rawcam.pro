@@ -19,13 +19,19 @@ HEADERS += OverlayWidget.h CameraThread.h ExampleOverlayWidget.h \
     CameraParameters.h \
     LEDBlinker.h \
     dot.h \
-    feedback.h
+    feedback.h \
+    RawcamApp.h \
+    ImageItem.h \
+    pasyncfilewriter.h
 SOURCES += rawcam.cpp OverlayWidget.cpp CameraThread.cpp ExampleOverlayWidget.cpp \
     myproximitysensor.cpp \
     CameraParameters.cpp \
     LEDBlinker.cpp \
     dot.cpp \
-    feedback.cpp
+    feedback.cpp \
+    RawcamApp.cpp \
+    ImageItem.cpp \
+    pasyncfilewriter.cpp
 
 
 
@@ -91,7 +97,8 @@ OTHER_FILES += \
     qtc_packaging/debian_fremantle/copyright \
     qtc_packaging/debian_fremantle/control \
     qtc_packaging/debian_fremantle/compat \
-    qtc_packaging/debian_fremantle/changelog
+    qtc_packaging/debian_fremantle/changelog \
+    rawcamF.desktop
 
 
 contains(MEEGO_EDITION,harmattan) {
@@ -106,9 +113,10 @@ maemo5 {
     INSTALLS += icon
     INSTALLS    += desktop
     desktop.path  = /usr/share/applications/hildon
-    desktop.files  = rawcam.desktop
+    desktop.files  = rawcamF.desktop
 }
 
 #while [ true ]; do chmod +x /tmp/qtc_packaging_rawcam/rawcam/debian/rules; done
 
 #todo: check if dcim exists
+

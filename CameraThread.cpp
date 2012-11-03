@@ -84,15 +84,26 @@ void CameraThread::run() {
     // saving at once.
 
     //FCam::Size (3552,2000)
+    //n900 wide 2560*1440
+
+
     FCam::Shot photo;
-    photo.image = FCam::Image(sensor.maxImageSize(), FCam::RAW, FCam::Image::AutoAllocate);
+    FCam::Size wideSize, photoSize;
+
     
-    QQueue<QString> pictureNames;
+//    QQueue<QString> pictureNames;
 //    LEDBlinker blinker;
 //    LEDBlinker::BlinkAction blink(&blinker);
 
     while (keepGoing) {
 	while (active) {
+#ifdef Q_WS_MAEMO_5
+    wideSize = FCam::Size(2560,1440);
+#else
+    wideSize = FCam::Size(3552,2000);
+#endif
+    if (parameters->aspectRatio.mode==parameters->aspectRatio.WIDE) photoSize = wideSize; else photoSize = sensor.maxImageSize();
+    photo.image = FCam::Image(photoSize, FCam::RAW, FCam::Image::AutoAllocate);
     #ifdef Q_WS_MAEMO_5
         FCam::Event e;
                 while (FCam::getNextEvent(&e)) {
@@ -181,7 +192,7 @@ void CameraThread::run() {
         }
 		
 		// Take a picture once autofocus completes and we have space to store the frame
-		if (takeSnapshot && autoFocus.idle() && writer.savesPending() < 8) {
+        if (takeSnapshot && autoFocus.idle() && writer->savesPending() < 8) {
 		    // use the metering the viewfinder has been doing
 		    photo.exposure  = viewfinder.exposure;
 		    photo.gain      = viewfinder.gain;
@@ -196,15 +207,15 @@ void CameraThread::run() {
 		}
 
 		// Drain the queue
-		FCam::Frame f;
+        FCam::Frame f;
 		do {
             f = sensor.getFrame();
             // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
             //qDebug()<< "before dequeure" <<  pictureNames;
-            if (!pictureNames.isEmpty() && pictureNames.length() > writer.savesPending()) {
-                QString newFile = QString(pictureNames.dequeue());
-                if (newFile.endsWith(".jpg")) emit pictureSaved(newFile);
-            }
+//            if (!pictureNames.isEmpty() && pictureNames.length() > writer.savesPending()) {
+//                QString newFile = QString(pictureNames.dequeue());
+//                if (newFile.endsWith(".jpg")) emit pictureSaved(newFile);
+//            }
 
 		    if (f.shot().id == photo.id) {
                 // Our photo came back, asynchronously save it to disk
@@ -223,20 +234,20 @@ void CameraThread::run() {
                 // Save it as a JPEG
                 snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
                      f.exposureStartTime().toString().c_str());
-                writer.saveJPEG(f, fname, 90);
+                writer->saveJPEG(f, fname, 90);
                 // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
-                pictureNames.enqueue(QString(fname));
+//                pictureNames.enqueue(QString(fname));
                 //qDebug()<< "after enqueue" <<  pictureNames;
 
                 // Save it as a DNG
                 snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
                  f.exposureStartTime().toString().c_str());
                 if (settings.value("saveDng",true)== true) {
-                    writer.saveDNG(f, fname);
-                    pictureNames.enqueue(QString(fname));
+                    writer->saveDNG(f, fname);
+//                    pictureNames.enqueue(QString(fname));
                 }
 
-		    } else if (f.shot().id == viewfinder.id) {
+            } else if (f.shot().id == viewfinder.id) {
 
 			// update the autofocus and metering algorithms
             autoFocus.update(f);
@@ -292,12 +303,22 @@ void CameraThread::run() {
 		} while (sensor.framesPending());
 	}
 	sleep(1);
-	sensor.stop();
-	cameralock->acquire();
-	cameralock->release();
-    }
+//#ifdef Q_WS_MAEMO_5
     // It is necessary to capture one "high resolution" image when exiting, otherwise camera-ui may not work.
     sensor.capture(photo);
     FCam::Frame fhr = sensor.getFrame();
     printf("got high res, exiting now\n");
+//#endif
+	sensor.stop();
+	cameralock->acquire();
+	cameralock->release();
+    }
+//        // It is necessary to capture one "high resolution" image when exiting, otherwise camera-ui may not work.
+//        sensor.start();
+//        sensor.capture(photo);
+//        FCam::Frame fhr = sensor.getFrame();
+//        sensor.stop();
+//        printf("got high res, exiting now\n");
+    emit finished();
+    qDebug()<<"out";
 }

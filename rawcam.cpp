@@ -23,6 +23,9 @@
 #include "CameraParameters.h"
 #include "dot.h"
 #include "feedback.h"
+#include "RawcamApp.h"
+#include "ImageItem.h"
+
 
 QTM_USE_NAMESPACE
 
@@ -67,7 +70,7 @@ QString readFile(QString filename) {
 
 
 int main(int argc, char **argv) {
-    QApplication app(argc, argv);
+    RawcamApp app(argc, argv);
     QCoreApplication::setOrganizationName("oob");
     QCoreApplication::setApplicationName("rawcam");
 
@@ -85,14 +88,15 @@ int main(int argc, char **argv) {
     ExampleOverlayWidget *overlay = new ExampleOverlayWidget();
 
     //create folders if they don't exist
-    if(!QFile::exists(getenv("HOME") + QString("/MyDocs/DCIM/"))) {
-        QDir *mydir = new QDir();
-        mydir->mkdir(getenv("HOME") + QString("/MyDocs/DCIM/"));
-        delete mydir;
-    }
+//    if(!QFile::exists(getenv("HOME") + QString("/MyDocs/DCIM/"))) {
+//        QDir *mydir = new QDir();
+//        mydir->mkdir(getenv("HOME") + QString("/MyDocs/DCIM/"));
+//        delete mydir;
+//    }
 
     // Make a thread that controls the camera
     CameraThread* cameraThread = new CameraThread(overlay);
+    app.setCameraThread(cameraThread);
 
     //overlay->setFixedSize(854, 480);
     layout->addWidget(overlay);
@@ -154,7 +158,7 @@ int main(int argc, char **argv) {
     //photo captured notification
     QLabel* success = new QLabel("Photo captured",window);
     success->move(50,50);
-    success->resize(754, 50);
+    success->resize(WIDTH - 100, 50);
     success->setFont(QFont("Nokia Pure Text", 20, 200, false));
     success->hide();
     success->setObjectName("success");
@@ -165,10 +169,14 @@ int main(int argc, char **argv) {
     QObject::connect(cameraThread->feedback.msgr,SIGNAL(photoTaken()), success, SLOT(show()));
     QObject::connect(cameraThread->feedback.msgr,SIGNAL(photoTaken()), successTimer, SLOT(start()));
 
-    CameraParameters* params = cameraThread->parameters;
+    //when a picture is taken process it
+//    QObject::connect(cameraThread,SIGNAL(newImage(ImageItem*)), iItem, SL);
 
-    if (!deviceN900) QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
-    QObject::connect(cameraThread, SIGNAL(pictureSaved(QString)), params, SLOT(setLastPicture(QString)));
+    CameraParameters* params = cameraThread->parameters;
+    pAsyncFileWriter* writer = cameraThread->writer;
+
+    if (!deviceN900) QObject::connect(writer, SIGNAL(pictureSaved(QString)), gallery, SLOT(show()));
+    QObject::connect(cameraThread->writer, SIGNAL(pictureSaved(QString)), params, SLOT(setLastPicture(QString)));
     QObject::connect(gallery,SIGNAL(clicked()), params, SLOT(openLastPicture()));
 
     // flash control
@@ -349,6 +357,14 @@ int main(int argc, char **argv) {
     help->setObjectName("help");
     if (settings.value("showHelp",true)==false) help->hide();
 
+    // closing label
+    QLabel* closing = new QLabel("closing...", window);
+    closing->setFont(QFont("Nokia Pure Text", 30, 200, false));
+    closing->resize(450,100);
+    closing->move((WIDTH-450)/2,(480-100)/2);
+    closing->setObjectName("closing");
+    closing->hide();
+
     QDeclarativeView *qmlView = new QDeclarativeView(window);
     qmlView->rootContext()->setContextProperty("params", params);
     qmlView->setSource(QUrl::fromLocalFile("/opt/rawcam/settings.qml"));
@@ -387,12 +403,18 @@ int main(int argc, char **argv) {
     //connect overlay touch to spot circle label
     QObject::connect(overlay, SIGNAL(focus(int, int)), spot, SLOT(move(int,int)));
 
-
+    //when the lens cover closes stop the camera thread
+    QObject::connect(cameraThread, SIGNAL(lensCoverClosed()),
+                     cameraThread, SLOT(stop()));
+    //and show a message that we are about to shut down
+    QObject::connect(cameraThread, SIGNAL(lensCoverClosed()),
+                     closing, SLOT(show()));
     // Once the camera thread stops, quit the app
     QObject::connect(cameraThread, SIGNAL(finished()),
                      &app, SLOT(quit()));
-    QObject::connect(cameraThread, SIGNAL(lensCoverClosed()),
-                     &app, SLOT(quit()));
+
+
+
     
     // Connect activate and deactivate events to camerathread
     QObject::connect(overlay, SIGNAL(deactivate()),
@@ -400,8 +422,8 @@ int main(int argc, char **argv) {
     QObject::connect(overlay, SIGNAL(activate()),
                      cameraThread, SLOT(resume()));
 
-    QObject::connect(overlay, SIGNAL(quit()),
-                     cameraThread, SLOT(stop()));
+//    QObject::connect(overlay, SIGNAL(quit()),
+//                     cameraThread, SLOT(stop()));
     
     // Show the app full screen
     window->showFullScreen();
@@ -412,7 +434,7 @@ int main(int argc, char **argv) {
     // Enter the QT main event loop
     app.exec();
 
-    while (cameraThread->writer.savesPending() > 0) sleep(1);
-    delete cameraThread;
+//    while (cameraThread->writer->savesPending() > 0) sleep(1);
+//    delete cameraThread;
 }
 
