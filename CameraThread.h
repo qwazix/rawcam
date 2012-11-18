@@ -46,6 +46,7 @@ public slots:
     void stop() {
         keepGoing = false;
         active = false;
+        writer->finish();
         qDebug()<<"stop" << keepGoing;
     }
 

@@ -305,9 +305,9 @@ void CameraThread::run() {
 	sleep(1);
 //#ifdef Q_WS_MAEMO_5
     // It is necessary to capture one "high resolution" image when exiting, otherwise camera-ui may not work.
-    sensor.capture(photo);
-    FCam::Frame fhr = sensor.getFrame();
-    printf("got high res, exiting now\n");
+//    sensor.capture(photo);
+//    FCam::Frame fhr = sensor.getFrame();
+//    printf("got high res, exiting now\n");
 //#endif
 	sensor.stop();
 	cameralock->acquire();

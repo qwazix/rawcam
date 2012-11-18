@@ -3,6 +3,7 @@
 
 #include <QApplication>
 #include "CameraThread.h"
+#include "OverlayWidget.h"
 
 class RawcamApp : public QApplication
 {
@@ -10,8 +11,10 @@ class RawcamApp : public QApplication
 public:
 
     RawcamApp(int &argc, char *argv[]);
+    void setOverlay(OverlayWidget* ol);
     void setCameraThread(CameraThread* ct);
     CameraThread* cameraThread;
+    OverlayWidget* overlay;
 
 public slots:
     void quit();

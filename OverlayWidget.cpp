@@ -77,6 +77,11 @@ OverlayWidget::OverlayWidget(QWidget *par) : QWidget(par)  {
         perror("FBIOPUT_VSCREENINFO");
     }
 
+    // Record the original color key
+    if (ioctl(overlay_fd, OMAPFB_GET_COLOR_KEY, &old_color_key)){
+        perror("OMAPFB_GET_COLOR_KEY");
+    }
+
     // Set up the color key
     struct omapfb_color_key color_key;
     color_key.key_type = OMAPFB_COLOR_KEY_GFX_DST;
@@ -145,14 +150,6 @@ void OverlayWidget::moveEvent(QMoveEvent *) {
 
 
 OverlayWidget::~OverlayWidget() {
-    old_color_key.trans_key = 0x842;
-    old_color_key.background = 0x0;
-    old_color_key.key_type = OMAPFB_COLOR_KEY_GFX_DST;
-    old_color_key.channel_out = OMAPFB_CHANNEL_OUT_LCD;
-
-    if (ioctl(overlay_fd, OMAPFB_SET_COLOR_KEY, &old_color_key)) {
-        perror("OMAPFB_SET_COLOR_KEY");
-    }
     disable();
     ::close(overlay_fd);
 }
@@ -204,9 +201,18 @@ void OverlayWidget::enable() {
 
 void OverlayWidget::disable() {
     plane_info.enabled = 0;
+    //    old_color_key.trans_key = 0x842;
+    //    old_color_key.background = 0x0;
+    //    old_color_key.key_type = OMAPFB_COLOR_KEY_GFX_DST;
+    //    old_color_key.channel_out = OMAPFB_CHANNEL_OUT_LCD;
+
+    if (ioctl(overlay_fd, OMAPFB_SET_COLOR_KEY, &old_color_key)) {
+        perror("OMAPFB_SET_COLOR_KEY");
+    }
     if (ioctl(overlay_fd, OMAPFB_SETUP_PLANE, &plane_info)) {
         perror("OMAPFB_SETUP_PLANE");
     }
+
 }
 
 void OverlayWidget::newViewfinderFrame() {
