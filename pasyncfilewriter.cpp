@@ -7,6 +7,7 @@
 #include "FCam/processing/DNG.h"
 #include "FCam/processing/Dump.h"
 #include "QString"
+#include "QSettings"
 
 
 using namespace std;
@@ -79,6 +80,19 @@ void pAsyncFileWriter::finish(){
 
 pAsyncFileWriter::~pAsyncFileWriter() {
     finish();
+}
+
+void pAsyncFileWriter::save(FCam::Frame f){
+    QSettings settings;
+    char fname[256];
+    // Save it as a JPEG
+    snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),f.exposureStartTime().toString().c_str());
+    saveJPEG(f, fname, 90);
+    // Save it as a DNG
+    snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),f.exposureStartTime().toString().c_str());
+    if (settings.value("saveDng",true)== true) {
+        saveDNG(f, fname);
+    }
 }
 
 void pAsyncFileWriter::saveDNG(FCam::Frame f, std::string filename) {

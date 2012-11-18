@@ -1,3 +1,13 @@
+rawcam (1.0.3) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Sun, 18 Nov 2012 20:24:13 +0200
+
+rawcam (1.0.2) unstable; urgency=low
+  * <Add change description here>
+
+ -- Michael Demetriou <qwazix@unknown>  Sun, 18 Nov 2012 15:30:20 +0200
+
 rawcam (1.0.1) unstable; urgency=low
   * Folder DCIM is created automatically
   * Fixed dependencies

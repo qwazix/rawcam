@@ -20,6 +20,7 @@ CameraParameters::CameraParameters() {
     flash.mode = Flash::OFF;
     flash.backCurtain = false;
     aspectRatio.mode = getSetting("aspectRatio",QVariant(AspectRatio::FOURTHIRDS)).toInt();
+    stabilization.mode = getSetting("stabilization",QVariant(Stabilization::OFF)).toInt();
 }
 
 CameraParameters::~CameraParameters() {}
@@ -195,6 +196,11 @@ void CameraParameters::setSetting(QString key, QVariant val){
 void CameraParameters::setAspectRatio(int mode){
     this->aspectRatio.mode = (mode);
     setSetting("AspectRatio",QVariant(mode));
+}
+
+void CameraParameters::setStabilization(int mode){
+    this->stabilization.mode = (mode);
+    setSetting("stabilization",QVariant(mode));
 }
 
 bool CameraParameters::isN900(){

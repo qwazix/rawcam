@@ -24,6 +24,9 @@ public:
     pAsyncFileWriter();
     ~pAsyncFileWriter();
 
+    /** save according to settings */
+    void save(FCam::Frame);
+
     /** Save a DNG in a background thread. */
     void saveDNG(FCam::Frame, std::string filename);
     void saveDNG(FCam::Image, std::string filename);

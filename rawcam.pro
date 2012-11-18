@@ -22,7 +22,8 @@ HEADERS += OverlayWidget.h CameraThread.h ExampleOverlayWidget.h \
     feedback.h \
     RawcamApp.h \
     ImageItem.h \
-    pasyncfilewriter.h
+    pasyncfilewriter.h \
+    paccelerometer.h
 SOURCES += rawcam.cpp OverlayWidget.cpp CameraThread.cpp ExampleOverlayWidget.cpp \
     myproximitysensor.cpp \
     CameraParameters.cpp \
@@ -31,7 +32,8 @@ SOURCES += rawcam.cpp OverlayWidget.cpp CameraThread.cpp ExampleOverlayWidget.cp
     feedback.cpp \
     RawcamApp.cpp \
     ImageItem.cpp \
-    pasyncfilewriter.cpp
+    pasyncfilewriter.cpp \
+    paccelerometer.cpp
 
 
 
@@ -42,7 +44,7 @@ DESTDIR     = build
 
 
 INSTALLS += target
-target.path = /opt/rawcam/bin/
+target.path = /opt/rawcam/bin
 
 INSTALLS += syspart
 syspart.path = /usr/share/policy/etc/syspart.conf.d

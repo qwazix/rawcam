@@ -83,7 +83,6 @@ OverlayWidget::OverlayWidget(QWidget *par) : QWidget(par)  {
     }
 
     // Set up the color key
-    struct omapfb_color_key color_key;
     color_key.key_type = OMAPFB_COLOR_KEY_GFX_DST;
     QColor key = colorKey();
     color_key.trans_key = ((key.red() >> 3) << 11) | ((key.green() >> 2) << 5) | ((key.blue() >> 3));
@@ -181,6 +180,9 @@ void OverlayWidget::enable() {
     plane_info.out_width = WIDTH - xcrop - xoff;
     plane_info.out_height = HEIGHT - ycrop - yoff;
 
+    if (ioctl(overlay_fd, OMAPFB_SET_COLOR_KEY, &color_key)) {
+        perror("OMAPFB_SET_COLOR_KEY");
+    }
     if (ioctl(overlay_fd, OMAPFB_SETUP_PLANE, &plane_info)) {
         perror("OMAPFB_SETUP_PLANE");
     }

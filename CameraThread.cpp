@@ -13,6 +13,10 @@
 #include <QQueue>
 #include <qmath.h>
 #include <QSettings>
+#include <QAccelerometer>
+#include <paccelerometer.h>
+
+QTM_USE_NAMESPACE
 
 #include "OverlayWidget.h"
 #include "CameraParameters.h"
@@ -86,11 +90,16 @@ void CameraThread::run() {
     //FCam::Size (3552,2000)
     //n900 wide 2560*1440
 
+    int luckyCount = 0;
+    FCam::Frame sharpest;
+    int sharpestScore = 0;
 
     FCam::Shot photo;
     FCam::Size wideSize, photoSize;
 
-    
+    int failedTries = 0;
+    pAccelerometer::ReadingVal oldAccReading, accReading;
+
 //    QQueue<QString> pictureNames;
 //    LEDBlinker blinker;
 //    LEDBlinker::BlinkAction blink(&blinker);
@@ -201,12 +210,38 @@ void CameraThread::run() {
             else photo.clearActions();
             feedback.time = photo.exposure;
             photo.addAction(feedback);
+            if (parameters->stabilization.mode == CameraParameters::Stabilization::OFF){
+                sensor.capture(photo);
+                takeSnapshot = false;
+            } else if (parameters->stabilization.mode == CameraParameters::Stabilization::BURST) {
+                // Save the sharpest of 8
+                std::vector<FCam::Shot> burst;
+                burst.resize(8);
+                for (int i = 0; i < 8; i++) {
+                    burst[i] = photo;
+                    burst[i].frameTime = 250000;
+                    burst[i].id = SHARPEST;
+                }
+                sensor.capture(burst);
+                luckyCount = 0;
+                takeSnapshot = false;
+            } else if (parameters->stabilization.mode == CameraParameters::Stabilization::ACCELEROMETER) {
+                oldAccReading = accReading;
+                accReading = accelerometer->reading();
+                if    (qFabs(accReading.x - oldAccReading.x) < 0.1 + 0.007*(float)failedTries  &&
+                       qFabs(accReading.y - oldAccReading.y) < 0.1 + 0.007*(float)failedTries &&
+                       qFabs(accReading.z - oldAccReading.z) < 0.1 + 0.007*(float)failedTries ){
+                    qDebug()<< qFabs(accReading.y);
+                    sensor.capture(photo);
+                    takeSnapshot = false;
+                    failedTries = 0;
+                } else {
+                    failedTries++;
+                }
+            }
 
-		    sensor.capture(photo);
-		    takeSnapshot = false;
 		}
-
-		// Drain the queue
+        // Drain the queue
         FCam::Frame f;
 		do {
             f = sensor.getFrame();
@@ -229,24 +264,38 @@ void CameraThread::run() {
                     printf("Got a full-res frame\n");
                 }
 
-                QSettings settings;
-                char fname[256];
-                // Save it as a JPEG
-                snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.jpg", getenv("HOME"),
-                     f.exposureStartTime().toString().c_str());
-                writer->saveJPEG(f, fname, 90);
-                // filewriter doesn't emit a signal when it finishes saving a file so we use a hackish way;
-//                pictureNames.enqueue(QString(fname));
-                //qDebug()<< "after enqueue" <<  pictureNames;
+                writer->save(f);
+            } else if (f.shot().id == SHARPEST) {
+                // evaluate the sharpness of this frame
+                FCam::Image im = f.image();
+                int sharpness = 0;
+                if (im.valid()) {
+                    for (size_t y = 20; y < im.height()-20; y += 20) {
+                        for (size_t x = 20; x < im.width()-20; x += 20) {
+                            sharpness += abs(im(x, y)[1] - im(x-1, y)[1]);
+                            sharpness += abs(im(x, y)[1] - im(x+1, y)[1]);
+                            sharpness += abs(im(x, y)[1] - im(x, y-1)[1]);
+                            sharpness += abs(im(x, y)[1] - im(x, y+1)[1]);
+                        }
+                    }
+                }
+                printf("Frame %d had sharpness %d\n", luckyCount, sharpness);
 
-                // Save it as a DNG
-                snprintf(fname, 255, "%s/MyDocs/DCIM/photo_%s.dng", getenv("HOME"),
-                 f.exposureStartTime().toString().c_str());
-                if (settings.value("saveDng",true)== true) {
-                    writer->saveDNG(f, fname);
-//                    pictureNames.enqueue(QString(fname));
+                // Decide whether it's better than the best so far
+                if (luckyCount == 0 || sharpness > sharpestScore) {
+                    printf("Accepting as sharper\n");
+                    sharpest = f;
+                    sharpestScore = sharpness;
+                } else {
+                    printf("Rejecting as blurrier\n");
+                }
+                // Save the best one in the burst
+                if (luckyCount == 7) {
+                    writer->save(sharpest);
+                    sharpest = FCam::Frame();
                 }
 
+                luckyCount++;
             } else if (f.shot().id == viewfinder.id) {
 
 			// update the autofocus and metering algorithms
@@ -319,6 +368,8 @@ void CameraThread::run() {
 //        FCam::Frame fhr = sensor.getFrame();
 //        sensor.stop();
 //        printf("got high res, exiting now\n");
+//    delete accelerometer;
+
     emit finished();
     qDebug()<<"out";
 }

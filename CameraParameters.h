@@ -83,6 +83,11 @@ public:
         int mode;
     } aspectRatio;
 
+    struct Stabilization {
+        enum {OFF = 0, BURST, ACCELEROMETER};
+        int mode;
+    } stabilization;
+
     QString lastPicture;
 
     // Emit the changed signal to notify other concerned objects that
@@ -117,6 +122,7 @@ public slots:
 
     void setWhiteBalance(int);
     void setWhiteBalanceMode(int);
+    void setStabilization(int);
 
     void setFlashOff();
     void setFlashHalf();

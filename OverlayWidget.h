@@ -45,7 +45,7 @@ signals:
     void quit();
 
 protected:
-    struct omapfb_color_key old_color_key;
+    struct omapfb_color_key color_key, old_color_key;
     void resizeEvent(QResizeEvent *);
     void moveEvent(QMoveEvent *);
     void showEvent(QShowEvent *);

@@ -20,6 +20,7 @@
 #include <QSettings>
 #include "feedback.h"
 #include "pasyncfilewriter.h"
+#include "paccelerometer.h"
 
 class OverlayWidget;
 
@@ -39,6 +40,7 @@ public:
         parameters = new CameraParameters;
         writer = new pAsyncFileWriter;
         takeSnapshot = false;
+        accelerometer = new pAccelerometer();
     }
 
 
@@ -97,8 +99,10 @@ private:
     bool active;
     bool focus;
     bool takeSnapshot;
+    pAccelerometer *accelerometer;
     OverlayWidget *overlay;
     QSemaphore *cameralock;
+    enum {SHARPEST = 215};
 };
 
 #endif

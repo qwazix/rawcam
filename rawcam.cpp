@@ -434,7 +434,8 @@ int main(int argc, char **argv) {
     // Enter the QT main event loop
     app.exec();
 
-//    while (cameraThread->writer->savesPending() > 0) sleep(1);
+    while (cameraThread->writer->savesPending() > 0) sleep(1);
+    qDebug("exit");
 //    delete cameraThread;
 }
 
