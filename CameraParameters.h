@@ -84,7 +84,7 @@ public:
     } aspectRatio;
 
     struct Stabilization {
-        enum {OFF = 0, BURST, ACCELEROMETER};
+        enum {OFF = 0, BURST, ACCELEROMETER, BOTH, LOWLIGHT};
         int mode;
     } stabilization;
 

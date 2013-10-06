@@ -9,6 +9,8 @@
 #include "QString"
 #include "QSettings"
 
+#include <QFile>
+#include <QDir>
 
 using namespace std;
 
@@ -26,6 +28,13 @@ pAsyncFileWriter::pAsyncFileWriter() {
     struct sched_param param;
 
     pending = 0;
+
+    //create folders if they don't exist
+    if(!QFile::exists(getenv("HOME") + QString("/MyDocs/DCIM/"))) {
+        QDir *mydir = new QDir();
+        mydir->mkdir(getenv("HOME") + QString("/MyDocs/DCIM/"));
+        delete mydir;
+    }
 
     // make the thread
 

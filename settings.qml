@@ -161,7 +161,7 @@ import com.nokia.meego 1.0
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    ButtonRow {
+                    ButtonColumn {
                         width: 400
                         Button{
                             text: "Off"
@@ -181,6 +181,18 @@ import com.nokia.meego 1.0
                             property int value: 2;
                             checked : params.getSetting("stabilization",0)==value
                         }
+                        Button{
+                            text: "Both"
+                            id: bothStabilization
+                            property int value: 3;
+                            checked : params.getSetting("stabilization",0)==value
+                        }
+//                        Button{
+//                            text: "LowLight"
+//                            id: lowLightStabilization
+//                            property int value: 4;
+//                            checked : params.getSetting("stabilization",0)==value
+//                        }
                         onCheckedButtonChanged: params.setStabilization(checkedButton.value);
                     }
                 }

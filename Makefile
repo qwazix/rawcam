@@ -1,2 +1,2 @@
--e clean:
+clean:
 	echo clean

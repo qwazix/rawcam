@@ -98,6 +98,7 @@ void CameraThread::run() {
     FCam::Size wideSize, photoSize;
 
     int failedTries = 0;
+    int timeSinceLastAccelerometerValue = 0;
     pAccelerometer::ReadingVal oldAccReading, accReading;
 
 //    QQueue<QString> pictureNames;
@@ -225,18 +226,37 @@ void CameraThread::run() {
                 sensor.capture(burst);
                 luckyCount = 0;
                 takeSnapshot = false;
-            } else if (parameters->stabilization.mode == CameraParameters::Stabilization::ACCELEROMETER) {
-                oldAccReading = accReading;
-                accReading = accelerometer->reading();
-                if    (qFabs(accReading.x - oldAccReading.x) < 0.1 + 0.007*(float)failedTries  &&
-                       qFabs(accReading.y - oldAccReading.y) < 0.1 + 0.007*(float)failedTries &&
-                       qFabs(accReading.z - oldAccReading.z) < 0.1 + 0.007*(float)failedTries ){
-                    qDebug()<< qFabs(accReading.y);
-                    sensor.capture(photo);
-                    takeSnapshot = false;
-                    failedTries = 0;
-                } else {
-                    failedTries++;
+            } else if (parameters->stabilization.mode == CameraParameters::Stabilization::ACCELEROMETER || parameters->stabilization.mode == CameraParameters::Stabilization::BOTH) {
+                // 10hz = once every 10000μs // interestingly it always returns zero difference under XXX
+                timeSinceLastAccelerometerValue += viewfinder.exposure;
+                qDebug()<<timeSinceLastAccelerometerValue;
+                if (timeSinceLastAccelerometerValue > 80000){
+                    oldAccReading = accReading;
+                    timeSinceLastAccelerometerValue = 0;
+                    accReading = accelerometer->reading();
+                    if    (qFabs(accReading.x - oldAccReading.x) < 0.1 + 0.007*(float)failedTries  &&
+                           qFabs(accReading.y - oldAccReading.y) < 0.1 + 0.007*(float)failedTries &&
+                           qFabs(accReading.z - oldAccReading.z) < 0.1 + 0.007*(float)failedTries ){
+                        //qDebug()<< qFabs(accReading.y - oldAccReading.y);
+                        if (parameters->stabilization.mode == CameraParameters::Stabilization::BOTH){
+                            // Save the sharpest of 4
+                            std::vector<FCam::Shot> burst;
+                            burst.resize(8);
+                            for (int i = 0; i < 8; i++) {
+                                burst[i] = photo;
+                                burst[i].frameTime = 500000;
+                                burst[i].id = SHARPEST;
+                            }
+                            sensor.capture(burst);
+                            luckyCount = 0;
+                        } else {
+                            sensor.capture(photo);
+                        }
+                        takeSnapshot = false;
+                        failedTries = 0;
+                    } else {
+                        failedTries++;
+                    }
                 }
             }
 

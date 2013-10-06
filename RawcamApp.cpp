@@ -17,7 +17,7 @@ void RawcamApp::setOverlay(OverlayWidget* ol){
 void RawcamApp::quit(){
     qDebug()<<"preparing to exit";
     cameraThread->wait();
-    delete cameraThread;
     delete overlay;
+    delete cameraThread;
     QApplication::quit();
 }

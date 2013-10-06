@@ -7,7 +7,7 @@ TARGET = rawcam
 INCLUDEPATH += ../../include
 
 
-CONFIG += debug warn_on
+#CONFIG += debug warn_on
 QT += declarative
 
 CONFIG += qt mobility
