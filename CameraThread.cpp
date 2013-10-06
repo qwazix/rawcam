@@ -205,7 +205,7 @@ void CameraThread::run() {
         if (takeSnapshot && autoFocus.idle() && writer->savesPending() < 8) {
 		    // use the metering the viewfinder has been doing
 		    photo.exposure  = viewfinder.exposure;
-		    photo.gain      = viewfinder.gain;
+            photo.gain      = viewfinder.gain;
             photo.whiteBalance = viewfinder.whiteBalance;
             if (parameters->flash.mode != CameraParameters::Flash::OFF) photo.addAction(fire);
             else photo.clearActions();
@@ -362,7 +362,8 @@ void CameraThread::run() {
             emit gainInfo("ISO "+QString::number(int(viewfinder.gain*100)));
 //            viewfinder.addAction(blink); //blink doesn't seem to work, must look into it
             if (parameters->gain.mode == parameters->gain.AUTO)
-                emit gainChanged((int)(200/(logf(2)/logf(viewfinder.gain))));
+                emit gainChanged((int)100*viewfinder.gain);
+//                emit gainChanged((int)(200/(logf(2)/logf(viewfinder.gain))));
             sensor.stream(viewfinder);
 
 			emit newViewfinderFrame();

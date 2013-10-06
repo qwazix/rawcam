@@ -259,9 +259,9 @@ int main(int argc, char **argv) {
     gainSlider->resize(750,40);
     gainSlider->move(80, 390);
     gainSlider->hide();
-    gainSlider->setMinimum(0);
-    gainSlider->setMaximum(1000);
-    gainSlider->setValue(500);
+    gainSlider->setMinimum(100);
+    gainSlider->setMaximum(3200);
+    gainSlider->setValue(400);
 
     QObject::connect(p,SIGNAL(clicked()), expSlider, SLOT(hide()));
     QObject::connect(p,SIGNAL(clicked()), params, SLOT(setExposureModeAuto()));
@@ -414,8 +414,8 @@ int main(int argc, char **argv) {
     QObject::connect(overlay, SIGNAL(activate()),
                      cameraThread, SLOT(resume()));
 
-//    QObject::connect(overlay, SIGNAL(quit()),
-//                     cameraThread, SLOT(stop()));
+    QObject::connect(overlay, SIGNAL(quit()),
+                     cameraThread, SLOT(stop()));
     
     // Show the app full screen
     window->showFullScreen();

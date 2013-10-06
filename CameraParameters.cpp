@@ -46,7 +46,8 @@ QString CameraParameters::Exposure::toString(float val) {
 
 QString CameraParameters::Gain::toString(float val) {
     QString str;
-    str.sprintf("ISO %d0", (int)(val*10 + 0.5));
+    str.sprintf("ISO %d0", (int)(val*100));
+//    str.sprintf("ISO %d0", (int)(val*10 + 0.5));
     return str;
 }
 
@@ -131,7 +132,8 @@ void CameraParameters::setGainValue(float val){
 }
 
 void CameraParameters::setGainValue(int val){
-    this->gain.value = powf(2, val/200.0);
+   this->gain.value = val/100;
+    // this->gain.value = powf(2, val/200.0);
 }
 
 
